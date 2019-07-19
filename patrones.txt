@@ -1,0 +1,4 @@
+Patrones de diseño:
+	Composite: Parte-todo : Empleados sucursales
+	Factory method: Usuarios - tipos de usuarios
+	Facade: Operaciones de transferencia entre cuentas
