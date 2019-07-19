@@ -6,7 +6,6 @@ Base de Datos  :  eurekabank
 Script         :  Crea la Base de Datos
 */
 
-
 -- =============================================
 -- Creación de la Base de Datos
 -- =============================================
@@ -38,6 +37,11 @@ DROP TABLE IF EXISTS interesmensual;
 DROP TABLE IF EXISTS costomovimiento;
 DROP TABLE IF EXISTS cargomantenimiento;
 DROP TABLE IF EXISTS moneda;
+DROP TABLE IF EXISTS usuario;
+
+DROP procedure if exists sp_insertarEmpleado;
+DROP procedure if exists sp_insertarAdmin;
+DROP procedure if exists sp_insertarCliente;
 
 
 -- =============================================
@@ -45,7 +49,7 @@ DROP TABLE IF EXISTS moneda;
 -- =============================================
 
 CREATE TABLE TipoMovimiento (
-	tipocodigo       CHAR(3) NOT NULL,
+	tipocodigo       INTEGER AUTO_INCREMENT,
 	tipodescripcion  VARCHAR(40) NOT NULL,
 	tipoaccion       VARCHAR(10) NOT NULL,
 	tipoestado       VARCHAR(15) DEFAULT 'ACTIVO' NOT NULL,
@@ -58,7 +62,7 @@ CREATE TABLE TipoMovimiento (
 ) ENGINE = INNODB ;
 
 CREATE TABLE Sucursal (
-	sucucodigo       AUTO_INCREMENT,
+	sucucodigo       INTEGER AUTO_INCREMENT,
 	sucunombre       VARCHAR(50) NOT NULL,
 	sucuciudad       VARCHAR(30) NOT NULL,
 	sucudireccion    VARCHAR(50) NULL,
@@ -67,25 +71,43 @@ CREATE TABLE Sucursal (
 		PRIMARY KEY (sucucodigo)
 ) ENGINE = INNODB ;
 
+CREATE TABLE Usuario (
+	usuaId 			INTEGER AUTO_INCREMENT,
+    usuaLogin 		varchar(100) not null,
+    usuaPassword 	varchar(60) not null,
+    usuaTipo		char(10) not null,
+    CONSTRAINT chk_usuaTipo
+		CHECK (usuaTipo IN ('cliente', 'empleado', 'administrador')),
+	CONSTRAINT PK_Usuario
+		PRIMARY KEY (usuaId),
+	CONSTRAINT U_Usuario_usuaLogin
+		UNIQUE (usuaLogin)
+) ENGINE = INNODB ;
+
 CREATE TABLE Empleado (
-	emplcodigo       AUTO_INCREMENT,
+	emplcodigo       INTEGER AUTO_INCREMENT,
 	emplpaterno      VARCHAR(25) NOT NULL,
 	emplmaterno      VARCHAR(25) NOT NULL,
 	emplnombre       VARCHAR(30) NOT NULL,
 	emplciudad       VARCHAR(30) NOT NULL,
-	empldireccion    VARCHAR(50) NULL,
-	emplusuario      VARCHAR(15) NOT NULL,
-	emplclave        VARCHAR(15) NOT NULL,
+	empldireccion    VARCHAR(50),
+	emplEmail		 VARCHAR(100) NOT NULL,
+	usuaId			 INTEGER,
 	CONSTRAINT PK_Empleado 
 		PRIMARY KEY (emplcodigo),
-	CONSTRAINT U_Empleado_emplusuario
-		UNIQUE (emplusuario)
+	CONSTRAINT fk_empleado_usuario
+		FOREIGN KEY (usuaId)
+        REFERENCES usuario(usuaId)
+        ON UPDATE RESTRICT
+        ON DELETE RESTRICT,
+	CONSTRAINT U_emplEmail
+		UNIQUE (emplEmail)
 ) ENGINE = INNODB ;
 
 CREATE TABLE Asignado (
-	asigcodigo       AUTO_INCREMENT,
-	sucucodigo       CHAR(3) NOT NULL,
-	emplcodigo       CHAR(4) NOT NULL,
+	asigcodigo       INTEGER AUTO_INCREMENT,
+	sucucodigo       INTEGER NOT NULL,
+	emplcodigo       INTEGER NOT NULL,
 	asigfechaalta    DATE NOT NULL,
 	asigfechabaja    DATE NULL,
 	CONSTRAINT PK_Asignado 
@@ -105,7 +127,7 @@ CREATE TABLE Asignado (
 ) ENGINE = INNODB;
 
 CREATE TABLE Cliente (
-	cliecodigo       CHAR(5) NOT NULL,
+	cliecodigo       INTEGER AUTO_INCREMENT,
 	cliepaterno      VARCHAR(25) NOT NULL,
 	cliematerno      VARCHAR(25) NOT NULL,
 	clienombre       VARCHAR(30) NOT NULL,
@@ -114,12 +136,20 @@ CREATE TABLE Cliente (
 	cliedireccion    VARCHAR(50) NOT NULL,
 	clietelefono     VARCHAR(20) NULL,
 	clieemail        VARCHAR(50) NULL,
+    usuaId			 INTEGER,
 	CONSTRAINT PK_Cliente 
-		PRIMARY KEY (cliecodigo)
+		PRIMARY KEY (cliecodigo),
+	CONSTRAINT fk_Cliente_usuario
+			FOREIGN KEY (usuaId)
+            REFERENCES Usuario (usuaId)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT,
+	CONSTRAINT U_cliedni
+		UNIQUE (cliedni)
 ) ENGINE = INNODB ;
 
 CREATE TABLE Moneda (
-	monecodigo       CHAR(2) NOT NULL,
+	monecodigo       INTEGER AUTO_INCREMENT,
 	monedescripcion  VARCHAR(20) NOT NULL,
 	CONSTRAINT PK_Moneda 
 		PRIMARY KEY (monecodigo)
@@ -127,10 +157,10 @@ CREATE TABLE Moneda (
 
 CREATE TABLE Cuenta (
 	cuencodigo       CHAR(8) NOT NULL,
-	monecodigo       CHAR(2) NOT NULL,
-	sucucodigo       CHAR(3) NOT NULL,
-	emplcreacuenta   CHAR(4) NOT NULL,
-	cliecodigo       CHAR(5) NOT NULL,
+	monecodigo       INTEGER NOT NULL,
+	sucucodigo       INTEGER NOT NULL,
+	emplcreacuenta   INTEGER NOT NULL,
+	cliecodigo       INTEGER,
 	cuensaldo        DECIMAL(12,2) NOT NULL,
 	cuenfechacreacion DATE NOT NULL,
 	cuenestado       VARCHAR(15) DEFAULT 'ACTIVO' NOT NULL,
@@ -170,8 +200,8 @@ CREATE TABLE Movimiento (
 	cuencodigo       CHAR(8) NOT NULL,
 	movinumero       INTEGER NOT NULL,
 	movifecha        DATE NOT NULL,
-	emplcodigo       CHAR(4) NOT NULL,
-	tipocodigo       CHAR(3) NOT NULL,
+	emplcodigo       INTEGER NOT NULL,
+	tipocodigo       INTEGER NOT NULL,
 	moviimporte      DECIMAL(12,2) NOT NULL,
 	cuenreferencia   CHAR(8) NULL,
 	CONSTRAINT Movimiento_importe4
@@ -199,7 +229,7 @@ CREATE TABLE Movimiento (
 ) ENGINE = INNODB ;
 
 CREATE TABLE Parametro (
-	paracodigo       CHAR(3) NOT NULL,
+	paracodigo       INTEGER AUTO_INCREMENT,
 	paradescripcion  VARCHAR(50) NOT NULL,
 	paravalor        VARCHAR(70) NOT NULL,
 	paraestado       VARCHAR(15) DEFAULT 'ACTIVO' NOT NULL,
@@ -210,7 +240,7 @@ CREATE TABLE Parametro (
 ) ENGINE = INNODB ;
 
 CREATE TABLE InteresMensual (
-	monecodigo       CHAR(2) NOT NULL,
+	monecodigo       INTEGER AUTO_INCREMENT,
 	inteimporte      DECIMAL(12,2) NOT NULL,
 	CONSTRAINT PK_InteresMensual 
 		PRIMARY KEY (monecodigo), 
@@ -223,7 +253,7 @@ CREATE TABLE InteresMensual (
 ) ENGINE = INNODB ;
 
 CREATE TABLE CostoMovimiento (
-	monecodigo       CHAR(2) NOT NULL,
+	monecodigo       INTEGER NOT NULL,
 	costimporte      DECIMAL(12,2) NOT NULL,
 	CONSTRAINT PK_CostoMovimiento 
 		PRIMARY KEY (monecodigo), 
@@ -236,7 +266,7 @@ CREATE TABLE CostoMovimiento (
 ) ENGINE = INNODB ;
 
 CREATE TABLE CargoMantenimiento (
-	monecodigo       CHAR(2) NOT NULL,
+	monecodigo       INTEGER NOT NULL,
 	cargMontoMaximo  DECIMAL(12,2) NOT NULL,
 	cargImporte      DECIMAL(12,2) NOT NULL,
 	CONSTRAINT PK_CargoMantenimiento 
@@ -256,3 +286,55 @@ CREATE TABLE Contador (
 	CONSTRAINT PK_Contador 
 		PRIMARY KEY (conttabla)
 ) ENGINE = INNODB ;
+
+-- PROCEDIMIENTOS DE INSERCIÓN
+
+DELIMITER //
+
+CREATE PROCEDURE sp_insertarEmpleado(paterno varchar(25), materno varchar(25), nombre varchar(30), ciudad varchar(30), direccion varchar(50), email varchar(100))
+BEGIN
+	INSERT INTO empleado(emplpaterno, emplmaterno, emplnombre, emplciudad, empldireccion, emplemail) VALUES (paterno, materno, nombre, ciudad, direccion, email);
+	INSERT INTO usuario (usuaLogin, usuaPassword, usuaTipo) values (email, '12345', 'empleado');
+END;
+//
+
+DELIMITER //
+CREATE PROCEDURE sp_insertarAdmin(paterno varchar(25), materno varchar(25), nombre varchar(30), ciudad varchar(30), direccion varchar(50), email varchar(100))
+BEGIN
+	INSERT INTO empleado(emplpaterno, emplmaterno, emplnombre, emplciudad, empldireccion, emplemail) VALUES (paterno, materno, nombre, ciudad, direccion, email);
+	INSERT INTO usuario (usuaLogin, usuaPassword, usuaTipo) values (email, '12345', 'admin');
+END;
+//
+
+DELIMITER //
+CREATE PROCEDURE sp_insertarCliente(paterno varchar(25), materno varchar(25), nombre varchar(30), dni varchar(100), ciudad varchar(30), direccion varchar(50), telefono varchar(20), email varchar(100))
+BEGIN
+	INSERT INTO cliente(cliepaterno, cliematerno, clienombre, cliedni, clieciudad, cliedireccion, clietelefono, clieemail) VALUES (paterno, materno, nombre, dni, ciudad, direccion, telefono, email);
+	INSERT INTO usuario (usuaLogin, usuaPassword, usuaTipo) values (dni, dni, 'cliente');
+END;
+//
+
+DROP trigger IF EXISTS tr_updateusuariosid;
+DELIMITER //
+CREATE TRIGGER tr_updateusuariosid AFTER INSERT ON usuario
+	FOR EACH ROW
+    BEGIN
+		DECLARE tipoUsuario char(10);
+        DECLARE DNI char(8);
+        SET tipoUsuario = NEW.usuaTipo;
+        
+        IF tipoUsuario = 'cliente' THEN
+			UPDATE cliente 
+				SET usuaId = NEW.usuaId 
+			WHERE
+				cliedni = NEW.usuaLogin;
+        END IF;
+        
+        IF tipoUsuario = 'empleado' OR tipoUsuario = 'administrador' THEN
+            UPDATE empleado 
+				SET usuaId = NEW.usuaId 
+            WHERE 
+				emplEmail = NEW.usuaLogin;
+		END IF;
+    END;
+//
