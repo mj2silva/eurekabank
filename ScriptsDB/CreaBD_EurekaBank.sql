@@ -337,4 +337,6 @@ CREATE TRIGGER tr_updateusuariosid AFTER INSERT ON usuario
 				emplEmail = NEW.usuaLogin;
 		END IF;
     END;
+    
+
 //
