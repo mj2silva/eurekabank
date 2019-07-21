@@ -290,19 +290,20 @@ CREATE TABLE Contador (
 -- PROCEDIMIENTOS DE INSERCIÓN
 
 DELIMITER //
-
-CREATE PROCEDURE sp_insertarEmpleado(paterno varchar(25), materno varchar(25), nombre varchar(30), ciudad varchar(30), direccion varchar(50), email varchar(100))
+CREATE PROCEDURE sp_insertarEmpleado(paterno varchar(25), materno varchar(25), nombre varchar(30), ciudad varchar(30), direccion varchar(50), email varchar(100), sucucodigo integer)
 BEGIN
 	INSERT INTO empleado(emplpaterno, emplmaterno, emplnombre, emplciudad, empldireccion, emplemail) VALUES (paterno, materno, nombre, ciudad, direccion, email);
 	INSERT INTO usuario (usuaLogin, usuaPassword, usuaTipo) values (email, '12345', 'empleado');
+    INSERT INTO asignado (sucucodigo, emplcodigo, asigfechaalta, asigfechabaja) values( sucucodigo, last_insert_id(), now(), null );
 END;
 //
-
+DROP PROCEDURE IF EXISTS sp_insertarAdmin;
 DELIMITER //
-CREATE PROCEDURE sp_insertarAdmin(paterno varchar(25), materno varchar(25), nombre varchar(30), ciudad varchar(30), direccion varchar(50), email varchar(100))
+CREATE PROCEDURE sp_insertarAdmin(paterno varchar(25), materno varchar(25), nombre varchar(30), ciudad varchar(30), direccion varchar(50), email varchar(100), sucucodigo integer)
 BEGIN
 	INSERT INTO empleado(emplpaterno, emplmaterno, emplnombre, emplciudad, empldireccion, emplemail) VALUES (paterno, materno, nombre, ciudad, direccion, email);
-	INSERT INTO usuario (usuaLogin, usuaPassword, usuaTipo) values (email, '12345', 'admin');
+	INSERT INTO asignado (sucucodigo, emplcodigo, asigfechaalta, asigfechabaja) values( sucucodigo, last_insert_id(), now(), null );
+    INSERT INTO usuario (usuaLogin, usuaPassword, usuaTipo) values (email, '12345', 'admin');
 END;
 //
 
@@ -330,7 +331,7 @@ CREATE TRIGGER tr_updateusuariosid AFTER INSERT ON usuario
 				cliedni = NEW.usuaLogin;
         END IF;
         
-        IF tipoUsuario = 'empleado' OR tipoUsuario = 'administrador' THEN
+        IF tipoUsuario = 'empleado' OR tipoUsuario = 'admin' THEN
             UPDATE empleado 
 				SET usuaId = NEW.usuaId 
             WHERE 
