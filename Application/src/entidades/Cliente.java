@@ -6,20 +6,20 @@ package entidades;
 
 /**
  *
- * @author Jairo Navez
+ * @author SERIN
  */
-public class Cliente extends Persona implements Comparable<Cliente> {
+public class Cliente extends Usuario implements Comparable<Cliente> {
     private String dni;
     private String telefono;
     private String email;
     
     public Cliente()
     {
-        this("00","NAP","NAM","NN","00000000","NC","ND","000000","NE","NI","NP");
+        this("00","NAP","NAM","NN","00000000","NC","ND","000000","NE");
     }
     
     public Cliente(String codigo, String paterno, String materno, String nombre, 
-            String dni, String ciudad, String direccion, String telefono, String email, String usuaID, String password)
+            String dni, String ciudad, String direccion, String telefono, String email)
     {
         super.codigo=codigo;
         super.paterno=paterno;
@@ -30,8 +30,6 @@ public class Cliente extends Persona implements Comparable<Cliente> {
         super.direccion=direccion;
         this.telefono=telefono;
         this.email=email;
-        this.usuaID=usuaID;
-        this.password=password;
     }
 
     public String getDni() {
@@ -121,25 +119,5 @@ public class Cliente extends Persona implements Comparable<Cliente> {
     @Override
     public void setDireccion(String direccion) {
         this.direccion = direccion;
-    }
-
-    @Override
-    public String getUsuaID() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setUsuaID(String usuaID) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getPassword() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setPassword(String password) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

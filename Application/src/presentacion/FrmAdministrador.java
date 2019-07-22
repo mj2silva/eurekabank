@@ -17,11 +17,12 @@ public class FrmAdministrador extends javax.swing.JFrame {
      * Creates new form FrmAdministrador
      */
     public FrmAdministrador() {
-        
         initComponents();
         txtUsuario.setText(Login.ID);
         this.setLocationRelativeTo(null);
         PanelAdministrador.setVisible(false);
+        PanelControl.setVisible(false);
+        jScrollPane1.setVisible(false);
     }
 
     /**
@@ -36,35 +37,30 @@ public class FrmAdministrador extends javax.swing.JFrame {
         PanelAdministrador = new javax.swing.JPanel();
         lblUsuario = new javax.swing.JLabel();
         txtUsuario = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        btnCerrarSesion = new javax.swing.JLabel();
+        lblUsuario1 = new javax.swing.JLabel();
+        PanelControl = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaAdministrador = new javax.swing.JTable();
         Wallpaper = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
-        jMenuItem7 = new javax.swing.JMenuItem();
-        jMenuItem8 = new javax.swing.JMenuItem();
-        jMenuItem9 = new javax.swing.JMenuItem();
+        btnSucursal = new javax.swing.JMenu();
+        btnEmpleado = new javax.swing.JMenu();
+        btnCliente = new javax.swing.JMenu();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setMaximumSize(new java.awt.Dimension(800, 523));
-        setMinimumSize(new java.awt.Dimension(800, 523));
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/resources/adminIco.png")).getImage());
+        setMinimumSize(new java.awt.Dimension(800, 534));
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(800, 523));
         setResizable(false);
-        setType(java.awt.Window.Type.UTILITY);
+        setType(java.awt.Window.Type.POPUP);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        PanelAdministrador.setMaximumSize(new java.awt.Dimension(300, 500));
+        PanelAdministrador.setMaximumSize(new java.awt.Dimension(300, 410));
+        PanelAdministrador.setMinimumSize(new java.awt.Dimension(300, 410));
         PanelAdministrador.setOpaque(false);
-        PanelAdministrador.setPreferredSize(new java.awt.Dimension(300, 500));
+        PanelAdministrador.setPreferredSize(new java.awt.Dimension(300, 410));
 
         javax.swing.GroupLayout PanelAdministradorLayout = new javax.swing.GroupLayout(PanelAdministrador);
         PanelAdministrador.setLayout(PanelAdministradorLayout);
@@ -74,105 +70,107 @@ public class FrmAdministrador extends javax.swing.JFrame {
         );
         PanelAdministradorLayout.setVerticalGroup(
             PanelAdministradorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
+            .addGap(0, 410, Short.MAX_VALUE)
         );
 
-        getContentPane().add(PanelAdministrador, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 0, -1, 500));
+        getContentPane().add(PanelAdministrador, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 0, -1, 410));
 
         lblUsuario.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
         lblUsuario.setForeground(new java.awt.Color(255, 255, 255));
-        lblUsuario.setText("USUARIO:");
-        getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 450, -1, -1));
+        lblUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/admin.png"))); // NOI18N
+        getContentPane().add(lblUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 410, 60, 80));
 
         txtUsuario.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
         txtUsuario.setForeground(new java.awt.Color(255, 255, 255));
         txtUsuario.setText("XXXXXXXX");
-        getContentPane().add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 450, -1, -1));
+        getContentPane().add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 430, -1, -1));
 
-        jLabel1.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 0));
-        jLabel1.setText("CERRAR SESIÓN");
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnCerrarSesion.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
+        btnCerrarSesion.setForeground(new java.awt.Color(255, 255, 0));
+        btnCerrarSesion.setText("CERRAR SESIÓN");
+        btnCerrarSesion.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel1MouseClicked(evt);
+                btnCerrarSesionMouseClicked(evt);
             }
         });
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 470, -1, -1));
+        getContentPane().add(btnCerrarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 460, -1, -1));
+
+        lblUsuario1.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
+        lblUsuario1.setForeground(new java.awt.Color(255, 255, 255));
+        lblUsuario1.setText("USUARIO:");
+        getContentPane().add(lblUsuario1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 430, -1, -1));
+
+        PanelControl.setOpaque(false);
+
+        javax.swing.GroupLayout PanelControlLayout = new javax.swing.GroupLayout(PanelControl);
+        PanelControl.setLayout(PanelControlLayout);
+        PanelControlLayout.setHorizontalGroup(
+            PanelControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 440, Short.MAX_VALUE)
+        );
+        PanelControlLayout.setVerticalGroup(
+            PanelControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 80, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(PanelControl, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 410, 440, 80));
+
+        tablaAdministrador.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Título 1", "Título 2", "Título 3", "Título 4"
+            }
+        ));
+        tablaAdministrador.setOpaque(false);
+        jScrollPane1.setViewportView(tablaAdministrador);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 410));
 
         Wallpaper.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/fondo.png"))); // NOI18N
         Wallpaper.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        getContentPane().add(Wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, -1));
+        getContentPane().add(Wallpaper, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 500));
 
         jMenuBar1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jMenu1.setText("SUCURSAL");
-
-        jMenuItem1.setText("REGISTRAR");
-        jMenuItem1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+        btnSucursal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/sucursal32.png"))); // NOI18N
+        btnSucursal.setText("SUCURSAL");
+        btnSucursal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSucursalMouseClicked(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenuBar1.add(btnSucursal);
 
-        jMenuItem2.setText("LISTAR");
-        jMenu1.add(jMenuItem2);
-
-        jMenuItem3.setText("ACTUALIZAR");
-        jMenu1.add(jMenuItem3);
-
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("EMPLEADO");
-
-        jMenuItem4.setText("REGISTRAR");
-        jMenu2.add(jMenuItem4);
-
-        jMenuItem5.setText("LISTAR");
-        jMenu2.add(jMenuItem5);
-
-        jMenuItem6.setText("ACTUALIZAR");
-        jMenu2.add(jMenuItem6);
-
-        jMenuBar1.add(jMenu2);
-
-        jMenu3.setText("CLIENTE");
-
-        jMenuItem7.setText("REGISTRAR");
-        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem7ActionPerformed(evt);
+        btnEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/empleado32.png"))); // NOI18N
+        btnEmpleado.setText("EMPLEADO");
+        btnEmpleado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnEmpleadoMouseClicked(evt);
             }
         });
-        jMenu3.add(jMenuItem7);
+        jMenuBar1.add(btnEmpleado);
 
-        jMenuItem8.setText("LISTAR");
-        jMenu3.add(jMenuItem8);
-
-        jMenuItem9.setText("ACTUALIZAR");
-        jMenu3.add(jMenuItem9);
-
-        jMenuBar1.add(jMenu3);
+        btnCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cliente32.png"))); // NOI18N
+        btnCliente.setText("CLIENTE");
+        btnCliente.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnClienteMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(btnCliente);
 
         setJMenuBar(jMenuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-        PnlSucu_Registrar sucuReg = new PnlSucu_Registrar();
-        sucuReg.setSize(300,500);
-        sucuReg.setLocation(0,0);
-        PanelAdministrador.setVisible(true);
-        PanelAdministrador.removeAll();
-        PanelAdministrador.add(sucuReg,BorderLayout.CENTER);
-        PanelAdministrador.revalidate();
-        PanelAdministrador.repaint();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
-
-    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+    private void btnCerrarSesionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCerrarSesionMouseClicked
         // TODO add your handling code here:
         this.dispose();
         Login FrmP = new Login();
@@ -181,19 +179,49 @@ public class FrmAdministrador extends javax.swing.JFrame {
         Login.TYPE_USER=null;
         Login.COD=null;
         FrmP.setVisible(true);
-    }//GEN-LAST:event_jLabel1MouseClicked
+    }//GEN-LAST:event_btnCerrarSesionMouseClicked
 
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+    private void btnSucursalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSucursalMouseClicked
         // TODO add your handling code here:
-        PnlClie_Registrar clieReg = new PnlClie_Registrar();
-        clieReg.setSize(300,500);
-        clieReg.setLocation(0,0);
-        PanelAdministrador.setVisible(true);
-        PanelAdministrador.removeAll();
-        PanelAdministrador.add(clieReg,BorderLayout.CENTER);
-        PanelAdministrador.revalidate();
-        PanelAdministrador.repaint();
-    }//GEN-LAST:event_jMenuItem7ActionPerformed
+        PanelAdministrador.setVisible(false);
+        jScrollPane1.setVisible(true);
+        PnlSucu_Control sucuControl = new PnlSucu_Control();
+        sucuControl.setSize(440,80);
+        sucuControl.setLocation(0,0);
+        PanelControl.setVisible(true);
+        PanelControl.removeAll();
+        PanelControl.add(sucuControl,BorderLayout.CENTER);
+        PanelControl.revalidate();
+        PanelControl.repaint();
+    }//GEN-LAST:event_btnSucursalMouseClicked
+
+    private void btnClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnClienteMouseClicked
+        // TODO add your handling code here:
+        PanelAdministrador.setVisible(false);
+        jScrollPane1.setVisible(true);
+        PnlClie_Control clieControl = new PnlClie_Control();
+        clieControl.setSize(440,80);
+        clieControl.setLocation(0,0);
+        PanelControl.setVisible(true);
+        PanelControl.removeAll();
+        PanelControl.add(clieControl,BorderLayout.CENTER);
+        PanelControl.revalidate();
+        PanelControl.repaint();
+    }//GEN-LAST:event_btnClienteMouseClicked
+
+    private void btnEmpleadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEmpleadoMouseClicked
+        // TODO add your handling code here:
+        PanelAdministrador.setVisible(false);
+        jScrollPane1.setVisible(true);
+        PnlEmp_Control empControl = new PnlEmp_Control();
+        empControl.setSize(440,80);
+        empControl.setLocation(0,0);
+        PanelControl.setVisible(true);
+        PanelControl.removeAll();
+        PanelControl.add(empControl,BorderLayout.CENTER);
+        PanelControl.revalidate();
+        PanelControl.repaint();
+    }//GEN-LAST:event_btnEmpleadoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -228,26 +256,22 @@ public class FrmAdministrador extends javax.swing.JFrame {
                 new FrmAdministrador().setVisible(true);
             }
         });
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel PanelAdministrador;
+    public static javax.swing.JPanel PanelAdministrador;
+    private javax.swing.JPanel PanelControl;
     private javax.swing.JLabel Wallpaper;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
+    private javax.swing.JLabel btnCerrarSesion;
+    private javax.swing.JMenu btnCliente;
+    private javax.swing.JMenu btnEmpleado;
+    private javax.swing.JMenu btnSucursal;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
-    private javax.swing.JMenuItem jMenuItem8;
-    private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblUsuario;
+    private javax.swing.JLabel lblUsuario1;
+    private javax.swing.JTable tablaAdministrador;
     private javax.swing.JLabel txtUsuario;
     // End of variables declaration//GEN-END:variables
 }

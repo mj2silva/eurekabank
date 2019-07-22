@@ -29,6 +29,7 @@ public class Login extends javax.swing.JFrame {
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
+        
     }
 
     /**
@@ -41,29 +42,28 @@ public class Login extends javax.swing.JFrame {
     private void initComponents() {
 
         txtID = new javax.swing.JTextField();
-        txtPASS = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        txtPASS = new javax.swing.JPasswordField();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setAutoRequestFocus(false);
+        setTitle("Log in");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/resources/loginIco.png")).getImage());
         setMaximumSize(new java.awt.Dimension(640, 264));
         setMinimumSize(new java.awt.Dimension(640, 264));
+        setUndecorated(true);
         setPreferredSize(new java.awt.Dimension(640, 264));
         setResizable(false);
-        setType(java.awt.Window.Type.UTILITY);
+        setType(java.awt.Window.Type.POPUP);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         txtID.setForeground(new java.awt.Color(255, 255, 255));
+        txtID.setToolTipText("USER");
         txtID.setBorder(null);
+        txtID.setCaretColor(new java.awt.Color(255, 255, 255));
         txtID.setOpaque(false);
         getContentPane().add(txtID, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 90, 110, 20));
-
-        txtPASS.setForeground(new java.awt.Color(255, 255, 255));
-        txtPASS.setBorder(null);
-        txtPASS.setOpaque(false);
-        getContentPane().add(txtPASS, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 130, 110, 20));
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton1.setForeground(new java.awt.Color(0, 51, 51));
@@ -74,6 +74,13 @@ public class Login extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 180, 150, -1));
+
+        txtPASS.setForeground(new java.awt.Color(255, 255, 255));
+        txtPASS.setToolTipText("PASSWORD");
+        txtPASS.setBorder(null);
+        txtPASS.setCaretColor(new java.awt.Color(255, 255, 255));
+        txtPASS.setOpaque(false);
+        getContentPane().add(txtPASS, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 130, 110, 20));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/login.jpg"))); // NOI18N
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 260));
@@ -132,7 +139,7 @@ public class Login extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -168,6 +175,6 @@ public class Login extends javax.swing.JFrame {
     public javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField txtID;
-    private javax.swing.JTextField txtPASS;
+    private javax.swing.JPasswordField txtPASS;
     // End of variables declaration//GEN-END:variables
 }

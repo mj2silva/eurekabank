@@ -15,7 +15,7 @@ end
 
 -- hacer transferencia
 
--- deposito en cuenta propia
+-- deposito en cuenta propia --considera convertir a procedimiento almacenado (dos movimientos, uno de entrada y otro de salida de dinero)
 delimiter //
 create procedure sp_depositoencuentapropia(cuentaorigen char(8), cuentadestino char(8), emplcodigo integer, tipocodigo integer, importe decimal)
 begin
@@ -28,9 +28,7 @@ create trigger t_depositoencuentapropia
 after insert on movimiento
 for each row
 begin
-	start transaction;
-    
-    select count(cuencodigo) 
+    select @nromovimientos = count(cuencodigo) 
     from movimiento 
     where cuencodigo = new.cuencodigo 
     group by cuencodigo;
@@ -60,10 +58,23 @@ begin
     on cm.monecodigo = m.monecodigo
     where m.monecodigo = @monecodigo;
     
-    if @nromovimientos > 15 then
+    select @cuensaldoorigen = c.cuensaldo
+    from cuenta c 
+    where c.cuencodigo = new.cuencodigo;
+    
+    select @cuensaldodestino = c.cuensaldo
+    from cuenta c
+    where c.cuencodigo = new.cuenreferencia;
+    
+    start transaction;
+    
+    if @nromovimientos > 15 and new.tipocodigo = 9 then
 		insert into movimiento(cuencodigo, movifecha, emplcodigo, tipocodigo, moviimporte, cuenreferencia)
         values (new.cuencodigo, now(), @emplcodigo, 10, @cargo, null);
 	end if;
+    
+    update cuenta set cuensaldo = @cuesaldoorigen - new.moviimporte where cuencodigo = @cuensaldoorigen;
+    update cuenta set cuensaldo = @cuesaldodestino + new.moviimporte where cuencodigo = @cuensaldodestino;
     
 end
 //

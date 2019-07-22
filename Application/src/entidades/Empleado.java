@@ -6,24 +6,21 @@ package entidades;
 
 /**
  *
- * @author Jairo Navez
+ * @author SERIN
  */
-public class Empleado extends Persona implements Comparable<Empleado> {
-
+public class Empleado extends Usuario implements Comparable<Empleado> {
     public Empleado(String codigo, String paterno,String materno,
-            String nombre,String ciudad,String direccion,String usuaID,String password) {
+            String nombre,String ciudad,String direccion) {
         super.codigo = codigo;
         super.paterno=paterno;
         super.materno=materno;
         super.nombre=nombre;
         super.ciudad=ciudad;
         super.direccion=direccion;
-        this.usuaID=usuaID;
-        this.password=password;
     }
 
     public Empleado() {
-        this("00", "NM","NP","NN","NC","ND","NU","00");
+        this("00", "NM","NP","NN","NC","ND");
     }
 
     @Override
@@ -90,23 +87,4 @@ public class Empleado extends Persona implements Comparable<Empleado> {
         this.direccion = direccion;
     }
 
-    @Override
-    public String getUsuaID() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setUsuaID(String usuaID) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getPassword() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setPassword(String password) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
