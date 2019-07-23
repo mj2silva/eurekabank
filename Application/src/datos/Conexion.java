@@ -18,9 +18,9 @@ public class Conexion {
     public static Connection establecerConexion()
             throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        String url = "jdbc:mysql://localhost:3306/eurekabank";
-        String user = "root";
-        String password = "12345";
+        String url = "jdbc:mysql://eurekabank.mysql.database.azure.com:3306/eurekabank";
+        String user = "adminEureka@eurekabank";
+        String password = "66566656Asd";
         return DriverManager.getConnection(url, user, password);
     }
     

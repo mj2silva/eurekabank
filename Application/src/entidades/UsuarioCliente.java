@@ -14,7 +14,7 @@ import datos.ClienteDAL;
 public class UsuarioCliente extends Usuario {
 
     public UsuarioCliente(int id, String login, String password, String usuaTipo) {
-        super(id, login, password, "empleado");
+        super(id, login, password, "cliente");
         this.persona = ClienteDAL.obtenerCliente(id);
     }
     

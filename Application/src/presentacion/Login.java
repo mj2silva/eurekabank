@@ -5,10 +5,13 @@
  */
 package presentacion;
 import datos.*;
+import entidades.Usuario;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
+import logica.UsuarioBL;
 /**
  *
  * @author SERIN
@@ -42,18 +45,17 @@ public class Login extends javax.swing.JFrame {
     private void initComponents() {
 
         txtID = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnIIngresar = new javax.swing.JButton();
         txtPASS = new javax.swing.JPasswordField();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Log in");
+        setBackground(java.awt.SystemColor.activeCaption);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/resources/loginIco.png")).getImage());
-        setMaximumSize(new java.awt.Dimension(640, 264));
         setMinimumSize(new java.awt.Dimension(640, 264));
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(640, 264));
         setResizable(false);
         setType(java.awt.Window.Type.POPUP);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -65,15 +67,15 @@ public class Login extends javax.swing.JFrame {
         txtID.setOpaque(false);
         getContentPane().add(txtID, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 90, 110, 20));
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(0, 51, 51));
-        jButton1.setText("SIGN IN");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnIIngresar.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnIIngresar.setForeground(new java.awt.Color(0, 51, 51));
+        btnIIngresar.setText("SIGN IN");
+        btnIIngresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnIIngresarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 180, 150, -1));
+        getContentPane().add(btnIIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 180, 150, -1));
 
         txtPASS.setForeground(new java.awt.Color(255, 255, 255));
         txtPASS.setToolTipText("PASSWORD");
@@ -88,45 +90,25 @@ public class Login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        ID=txtID.getText();
-        PASSWORD=txtPASS.getText();
-        try{
-            cn = Conexion.establecerConexion();
-            st = cn.createStatement();
-            String sql = "select * from usuarios"
-                    + " where usuaLogin='"+ID+"' and usuaPassword='"+PASSWORD+"'";
-            rs = st.executeQuery(sql);
-            while(rs.next()){
-               COD=rs.getString(1);
-               TYPE_USER=rs.getString(4);
+    private void btnIIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIIngresarActionPerformed
+        try {
+            // TODO add your handling code here:
+            ID = txtID.getText();
+            PASSWORD = txtPASS.getText();
+            
+            Usuario usuario = UsuarioBL.iniciarSesion(ID, PASSWORD);
+            showMessageDialog(null, usuario.getUsuaTipo());
+            if (usuario.getUsuaTipo().equals("cliente")) {
+                FrmCliente frmCliente = new FrmCliente();
+                frmCliente.setVisible(true);
+            } else if (usuario.getUsuaTipo().equals("administrador")) {
+                FrmAdministrador frmAdministrador = new FrmAdministrador();
+                frmAdministrador.setVisible(true);
             }
-        } catch (ClassNotFoundException |SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if(COD==null || TYPE_USER==null){
-                showMessageDialog(null, "Usuario no encontrado o Password incorrecto.\n", "Error", 0);
-                txtID.setText(null);
-                txtPASS.setText(null);
-            } else{
-                if(TYPE_USER.equals("Admin")){
-                    FrmAdministrador FrmAdmin = new FrmAdministrador();
-                    FrmAdmin.setVisible(true);
-                }
-                showMessageDialog(null, TYPE_USER, "TIPO DE USUARIO", 1);
-                showMessageDialog(null, COD, "CODIGO", 1);
-                dispose();
-            }
-            try {
-                rs.close();
-                st.close();
-                cn.close();
-            } catch (SQLException ex) {
-                showMessageDialog(null, ex.getMessage(), "Error", 0);
-            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnIIngresarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -172,7 +154,7 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.JButton jButton1;
+    public javax.swing.JButton btnIIngresar;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField txtID;
     private javax.swing.JPasswordField txtPASS;

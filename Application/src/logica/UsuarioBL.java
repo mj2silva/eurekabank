@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
  * @author manue
  */
 public class UsuarioBL {
-    public Usuario iniciarSesion(String login, String password) throws Exception {
+    public static Usuario iniciarSesion(String login, String password) throws Exception {
         Usuario usuario;
         
         if (!UsuarioDAL.verificarUsuario(login, password)) {
