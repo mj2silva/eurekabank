@@ -7,6 +7,7 @@ package datos;
 
 import entidades.Cliente;
 import entidades.Cuenta;
+import entidades.Empleado;
 import entidades.Persona;
 import entidades.Movimiento;
 import java.math.BigDecimal;
@@ -104,7 +105,6 @@ public class ClienteDAL {
                 cuenta = new Cuenta(codigo, moneda, saldo, estado, fechaCreacion, contMov);
                 cuenta.setMovimientos(historialDeMovimientos(cuenta));
                 arrayCuentas.add(cuenta);
-                
             }
         } catch (ClassNotFoundException | SQLException ex) {
             showMessageDialog(null, ex.getMessage(),"Excepcion", 0);
@@ -127,7 +127,13 @@ public class ClienteDAL {
                 Date fecha = rs.getDate(2);
                 String tipodescripcion = rs.getString(3);
                 BigDecimal moviimporte = rs.getBigDecimal(4);
-                String cuenreferencia = rs.getString(5);
+                String cuenreferencia;
+                if (rs.getString(5) == null) {
+                    cuenreferencia = rs.getString(5);
+                } else {
+                    cuenreferencia = "n/a";
+                }
+                
                 arrayMovimientos.add(new Movimiento(codigo, fecha, tipodescripcion, moviimporte, cuenreferencia));
             }
         } catch (ClassNotFoundException | SQLException ex) {
@@ -137,4 +143,21 @@ public class ClienteDAL {
         return arrayMovimientos;
     }
     
+    public static void agregarCuenta(Cuenta cuenta, Cliente cliente, Persona empleado) 
+    {
+        try {
+            cn = Conexion.establecerConexion();
+            String sql = "{call sp_nuevacuenta(?, ?, ?, ?, ?)}";
+            ps = cn.prepareStatement(sql);
+            ps.setString(1, cuenta.getNumeroDeCuenta());
+            ps.setInt(2, cliente.getCodigo());
+            ps.setString(3, cuenta.getTipoDeMoneda());
+            ps.setInt(4, empleado.getCodigo());
+            ps.setBigDecimal(5, cuenta.getSaldo());
+            ps.executeUpdate();
+            
+        } catch (ClassNotFoundException | SQLException ex) {
+            showMessageDialog(null, ex.getMessage(),"Excepcion", 0);
+        }
+    }
 }

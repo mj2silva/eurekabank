@@ -5,9 +5,14 @@
  */
 package presentacion;
 
+import datos.ClienteDAL;
 import entidades.Cliente;
 import entidades.Cuenta;
+import entidades.Empleado;
+import entidades.Movimiento;
+import entidades.Persona;
 import java.util.ArrayList;
+import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.table.DefaultTableModel;
 import logica.ClienteBL;
 
@@ -16,14 +21,30 @@ import logica.ClienteBL;
  * @author COMPAQ
  */
 public class FrmGestionCliente extends javax.swing.JFrame {
-    private Cliente cliente;
+    private final Cliente cliente;
     public static DefaultTableModel modeloCuenta; 
+    public static DefaultTableModel modeloMovimientos; 
+    public ArrayList<Cuenta> arrayCuentas;
+    public ArrayList<Movimiento> arrayMovimientos;
+    private final Persona empleado;
     /**
      * Creates new form FrmGestionCliente
+     * @param cliente
+     * @param empleado
      */
-    public FrmGestionCliente(Cliente cliente) {
+    public FrmGestionCliente(Cliente cliente, Persona empleado) {
         initComponents();
         this.cliente = cliente;
+        this.empleado = empleado;
+        
+        this.txtCodigo.setText(String.valueOf(cliente.getCodigo()));
+        this.txtNombre.setText(cliente.getNombre());
+        this.txtPaterno.setText(cliente.getPaterno());
+        this.txtMaterno.setText(cliente.getMaterno());
+        this.txtDni.setText(cliente.getDni());
+        this.txtEmail.setText(cliente.getEmail());
+        this.txtTelefono.setText(cliente.getTelefono());
+        
         modeloCuenta = new DefaultTableModel();
         modeloCuenta.addColumn("Nro. Cuenta");
         modeloCuenta.addColumn("Estado");
@@ -33,7 +54,17 @@ public class FrmGestionCliente extends javax.swing.JFrame {
         
         tablaCuentas.setModel(modeloCuenta);
         
-        llenarTablaCuentas(cliente);
+        arrayCuentas = ClienteDAL.cuentaCliente(cliente);
+        
+        for (int i = 0; i < ClienteDAL.cuentaCliente(cliente).size(); i++) {
+            modeloCuenta.addRow(new Object[]{
+                arrayCuentas.get(i).getNumeroDeCuenta(),
+                arrayCuentas.get(i).getEstado(),
+                arrayCuentas.get(i).getSaldo(),
+                arrayCuentas.get(i).getTipoDeMoneda(),
+                arrayCuentas.get(i).getFechaCreacion()
+            });
+        }
     }
 
     /**
@@ -74,10 +105,11 @@ public class FrmGestionCliente extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        btnHistorial = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tablaCuentas1 = new javax.swing.JTable();
+        tablaMovimientos = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuDeposito = new javax.swing.JMenuItem();
@@ -287,8 +319,20 @@ public class FrmGestionCliente extends javax.swing.JFrame {
         jLabel11.setText("CUENTAS");
 
         jButton1.setText("CREAR");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("ELIMINAR");
+
+        btnHistorial.setText("Ver historial");
+        btnHistorial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHistorialActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -298,11 +342,13 @@ public class FrmGestionCliente extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -313,7 +359,8 @@ public class FrmGestionCliente extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(btnHistorial))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -327,7 +374,7 @@ public class FrmGestionCliente extends javax.swing.JFrame {
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("MOVIMIENTOS");
 
-        tablaCuentas1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaMovimientos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -343,7 +390,7 @@ public class FrmGestionCliente extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(tablaCuentas1);
+        jScrollPane2.setViewportView(tablaMovimientos);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -442,6 +489,28 @@ public class FrmGestionCliente extends javax.swing.JFrame {
         FrmRet.setVisible(true);
     }//GEN-LAST:event_menuRetiroActionPerformed
 
+    private void btnHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialActionPerformed
+        // TODO add your handling code here:
+        
+        modeloMovimientos = new DefaultTableModel();
+        modeloMovimientos.addColumn("Nro. Cuenta");
+        modeloMovimientos.addColumn("Fecha");
+        modeloMovimientos.addColumn("Tipo");
+        modeloMovimientos.addColumn("Importe");
+        modeloMovimientos.addColumn("Cuenta de referencia");
+        
+        tablaMovimientos.setModel(modeloMovimientos);
+        
+        Cuenta cuenta = arrayCuentas.get(tablaCuentas.getSelectedRow());
+        llenarTablaMovimientos(cuenta);
+    }//GEN-LAST:event_btnHistorialActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        FrmNuevaCuenta frmNuevaCuenta = new FrmNuevaCuenta(cliente, empleado);
+        frmNuevaCuenta.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -480,6 +549,7 @@ public class FrmGestionCliente extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnHistorial;
     private javax.swing.JButton btnModificar;
     private javax.swing.JComboBox<String> cbxCiudad;
     private javax.swing.JButton jButton1;
@@ -507,7 +577,7 @@ public class FrmGestionCliente extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuTransferencia;
     private javax.swing.JPanel pnlDatosCliente;
     private javax.swing.JTable tablaCuentas;
-    private javax.swing.JTable tablaCuentas1;
+    private javax.swing.JTable tablaMovimientos;
     private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtDni;
@@ -518,18 +588,19 @@ public class FrmGestionCliente extends javax.swing.JFrame {
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 
-    private void llenarTablaCuentas(Cliente cliente) {
-        modeloCuenta.setRowCount(0);
-        ArrayList<Cuenta> arrayCuentas;
-        arrayCuentas = ClienteBL.getCuentas(cliente);
+
+    private void llenarTablaMovimientos(Cuenta cuenta) {
+        modeloMovimientos.setRowCount(0);
         
-        for (int i = 0; i < arrayCuentas.size(); i++) {
-            modeloCuenta.addRow(new Object[]{
-                arrayCuentas.get(i).getNumeroDeCuenta(),
-                arrayCuentas.get(i).getEstado(),
-                arrayCuentas.get(i).getSaldo(),
-                arrayCuentas.get(i).getTipoDeMoneda(),
-                arrayCuentas.get(i).getFechaCreacion()
+        arrayMovimientos = cuenta.getMovimientos();
+        
+        for (int i = 0; i < arrayMovimientos.size(); i++) {
+            modeloMovimientos.addRow(new Object[]{
+                arrayMovimientos.get(i).getCodigo(),
+                arrayMovimientos.get(i).getFecha(),
+                arrayMovimientos.get(i).getTipodescripcion(),
+                arrayMovimientos.get(i).getMoviimporte(),
+                arrayMovimientos.get(i).getCuenreferencia()
             });
         }
     }

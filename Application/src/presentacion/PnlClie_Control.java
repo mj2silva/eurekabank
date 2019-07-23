@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import logica.ClienteBL;
 import static presentacion.FrmEmpleado.modelo;
 import static presentacion.FrmEmpleado.tablaClientes;
+import static presentacion.FrmEmpleado.usuario;
 
 /**
  *
@@ -116,7 +117,7 @@ public class PnlClie_Control extends javax.swing.JPanel {
     private void btnEstadoCuentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEstadoCuentaMouseClicked
         // TODO add your handling code here:
         int index = tablaClientes.getSelectedRow();
-        FrmGestionCliente FrmGestClie = new FrmGestionCliente(arrayClientes.get(index));
+        FrmGestionCliente FrmGestClie = new FrmGestionCliente(arrayClientes.get(index), usuario.getPersona());
         FrmGestClie.setVisible(true);
     }//GEN-LAST:event_btnEstadoCuentaMouseClicked
 

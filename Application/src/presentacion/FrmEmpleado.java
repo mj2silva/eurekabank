@@ -7,6 +7,7 @@ package presentacion;
 
 import entidades.Cliente;
 import entidades.Usuario;
+import entidades.UsuarioEmpleado;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -22,7 +23,7 @@ public class FrmEmpleado extends javax.swing.JFrame {
      * Creates new form FrmAdministrador
      */
     public static DefaultTableModel modelo;
-    public Usuario usuario;
+    public static Usuario usuario;
     
     public FrmEmpleado(Usuario usuario) {
         initComponents();

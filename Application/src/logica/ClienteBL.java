@@ -8,6 +8,8 @@ package logica;
 import datos.ClienteDAL;
 import entidades.Cliente;
 import entidades.Cuenta;
+import entidades.Empleado;
+import entidades.Persona;
 import java.util.ArrayList;
 
 /**
@@ -24,5 +26,9 @@ public class ClienteBL {
     public static ArrayList<Cuenta> getCuentas(Cliente cliente) {
         ArrayList<Cuenta> arrayCuentas = ClienteDAL.cuentaCliente(cliente);
         return arrayCuentas;
+    }
+    
+    public static void agregarCuenta(Cuenta cuenta, Cliente cliente, Persona empleado)  {
+        ClienteDAL.agregarCuenta(cuenta, cliente, empleado);
     }
 }

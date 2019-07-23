@@ -300,10 +300,16 @@ end;
 
 -- nueva cuenta
 delimiter //
-create procedure sp_nuevacuenta(cuencodigo char(8), cliecodigo integer, monecodigo integer, emplcodigo integer, importe decimal)
+create procedure sp_nuevacuenta(cuencodigo char(8), cliecodigo integer, monedescripcion varchar(20), emplcodigo integer, importe decimal)
 begin
 	declare sucucodigo integer;
     declare fechahoy date;
+    declare monecodigo integer;
+    
+    select m.monecodigo
+    into monecodigo
+    from moneda m
+    where m.monedescripcion = monedescripcion;
     
     set fechahoy = now();
     select s.sucucodigo
@@ -311,7 +317,7 @@ begin
     from empleado e
     join asignado a
     on e.emplcodigo = a.emplcodigo
-    join sucursal on 
+    join sucursal s on 
     a.sucucodigo = s.sucucodigo
     where e.emplcodigo = emplcodigo;
     
