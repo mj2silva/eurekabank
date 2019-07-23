@@ -6,8 +6,12 @@
 package datos;
 
 import entidades.Cliente;
+import entidades.Cuenta;
 import entidades.Persona;
+import entidades.Movimiento;
+import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -78,6 +82,59 @@ public class ClienteDAL {
         }
         
         return arrayClientes;
+    }
+    
+    public static ArrayList<Cuenta> cuentaCliente(Cliente cliente) {
+        ArrayList<Cuenta> arrayCuentas = new ArrayList<>();
+        
+        try {
+            Cuenta cuenta;
+            cn = Conexion.establecerConexion();
+            String sql = "{call sp_cuentacliente(?)}";
+            ps = cn.prepareStatement(sql);
+            ps.setInt(1, cliente.getCodigo());
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                String codigo = rs.getString(1);
+                String moneda = rs.getString(2);
+                BigDecimal saldo = rs.getBigDecimal(3);
+                String estado = rs.getString(4);
+                Date fechaCreacion = rs.getDate(5);
+                int contMov = rs.getInt(6);
+                cuenta = new Cuenta(codigo, moneda, saldo, estado, fechaCreacion, contMov);
+                cuenta.setMovimientos(historialDeMovimientos(cuenta));
+                arrayCuentas.add(cuenta);
+                
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            showMessageDialog(null, ex.getMessage(),"Excepcion", 0);
+        }
+        
+        return arrayCuentas;
+    }
+    
+    public static ArrayList<Movimiento> historialDeMovimientos(Cuenta cuenta) {
+        ArrayList<Movimiento> arrayMovimientos = new ArrayList<>();
+        
+        try {
+            cn = Conexion.establecerConexion();
+            String sql = "{call sp_historialdemovimientos(?)}";
+            ps = cn.prepareStatement(sql);
+            ps.setString(1, cuenta.getNumeroDeCuenta());
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                String codigo = rs.getString(1);
+                Date fecha = rs.getDate(2);
+                String tipodescripcion = rs.getString(3);
+                BigDecimal moviimporte = rs.getBigDecimal(4);
+                String cuenreferencia = rs.getString(5);
+                arrayMovimientos.add(new Movimiento(codigo, fecha, tipodescripcion, moviimporte, cuenreferencia));
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            showMessageDialog(null, ex.getMessage(),"Excepcion", 0);
+        }
+        
+        return arrayMovimientos;
     }
     
 }

@@ -278,7 +278,7 @@ end;
 delimiter //
 create procedure sp_cuentacliente(cliecodigo integer)
 begin
-	select cuencodigo, monedescripcion, cuensaldo, cuenestado, cuencontmov
+	select cuencodigo, monedescripcion, cuensaldo, cuenestado, cuenfechacreacion, cuencontmov
     from cuenta c
     join moneda m
     on c.monecodigo = m.monecodigo
@@ -325,7 +325,7 @@ delimiter //
 create procedure sp_buscarcliente(str varchar(50))
 begin
 	declare pattern varchar(52);
-    set pattern = '%' + str + '%';
+    set pattern = concat('%', str, '%');
 	select * from cliente 
     where 
 		cliepaterno like pattern or cliematerno like pattern or clienombre like pattern or
@@ -382,7 +382,7 @@ create procedure sp_obtenerusuario(login varchar(100), upassword varchar(60))
 begin
 	select * from usuario where usualogin = login and usuapassword = upassword;
 end;
-//
+// -- implemented
 
 
 

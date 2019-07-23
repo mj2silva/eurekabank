@@ -5,18 +5,35 @@
  */
 package presentacion;
 
+import entidades.Cliente;
+import entidades.Cuenta;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import logica.ClienteBL;
+
 /**
  *
  * @author COMPAQ
  */
 public class FrmGestionCliente extends javax.swing.JFrame {
-
+    private Cliente cliente;
+    public static DefaultTableModel modeloCuenta; 
     /**
      * Creates new form FrmGestionCliente
      */
-    public FrmGestionCliente() {
+    public FrmGestionCliente(Cliente cliente) {
         initComponents();
+        this.cliente = cliente;
+        modeloCuenta = new DefaultTableModel();
+        modeloCuenta.addColumn("Nro. Cuenta");
+        modeloCuenta.addColumn("Estado");
+        modeloCuenta.addColumn("Monto");
+        modeloCuenta.addColumn("Tipo de moneda");
+        modeloCuenta.addColumn("Fecha de creación");
         
+        tablaCuentas.setModel(modeloCuenta);
+        
+        llenarTablaCuentas(cliente);
     }
 
     /**
@@ -455,7 +472,7 @@ public class FrmGestionCliente extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmGestionCliente().setVisible(true);
+                //new FrmGestionCliente().setVisible(true);
             }
         });
     }
@@ -500,4 +517,20 @@ public class FrmGestionCliente extends javax.swing.JFrame {
     private javax.swing.JTextField txtPaterno;
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
+
+    private void llenarTablaCuentas(Cliente cliente) {
+        modeloCuenta.setRowCount(0);
+        ArrayList<Cuenta> arrayCuentas;
+        arrayCuentas = ClienteBL.getCuentas(cliente);
+        
+        for (int i = 0; i < arrayCuentas.size(); i++) {
+            modeloCuenta.addRow(new Object[]{
+                arrayCuentas.get(i).getNumeroDeCuenta(),
+                arrayCuentas.get(i).getEstado(),
+                arrayCuentas.get(i).getSaldo(),
+                arrayCuentas.get(i).getTipoDeMoneda(),
+                arrayCuentas.get(i).getFechaCreacion()
+            });
+        }
+    }
 }

@@ -9,7 +9,6 @@ import entidades.Cliente;
 import entidades.Usuario;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import logica.ClienteBL;
 
@@ -278,7 +277,7 @@ public class FrmEmpleado extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JLabel lblUsuario1;
-    public javax.swing.JTable tablaClientes;
+    public static javax.swing.JTable tablaClientes;
     private javax.swing.JLabel txtUsuario;
     // End of variables declaration//GEN-END:variables
 

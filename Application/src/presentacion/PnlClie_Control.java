@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import logica.ClienteBL;
 import static presentacion.FrmEmpleado.modelo;
+import static presentacion.FrmEmpleado.tablaClientes;
 
 /**
  *
@@ -18,6 +19,7 @@ import static presentacion.FrmEmpleado.modelo;
  */
 public class PnlClie_Control extends javax.swing.JPanel {
     public String busqueda;
+    public ArrayList<Cliente> arrayClientes = new ArrayList<>();
     /**
      * Creates new form PnlClie_Control
      */
@@ -113,7 +115,8 @@ public class PnlClie_Control extends javax.swing.JPanel {
 
     private void btnEstadoCuentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEstadoCuentaMouseClicked
         // TODO add your handling code here:
-        FrmGestionCliente FrmGestClie = new FrmGestionCliente();
+        int index = tablaClientes.getSelectedRow();
+        FrmGestionCliente FrmGestClie = new FrmGestionCliente(arrayClientes.get(index));
         FrmGestClie.setVisible(true);
     }//GEN-LAST:event_btnEstadoCuentaMouseClicked
 
@@ -133,9 +136,10 @@ public class PnlClie_Control extends javax.swing.JPanel {
 
     private void llenarTabla(String busqueda) {
         modelo.setRowCount(0);
-        ArrayList<Cliente> arrayClientes;
+        if (arrayClientes.size() > 0) {
+            arrayClientes.clear();
+        }
         arrayClientes = ClienteBL.buscarCliente(busqueda);
-        
         for (int i = 0; i < arrayClientes.size(); i++) {
             modelo.addRow(new Object[]{
                 arrayClientes.get(i).getNombre(),

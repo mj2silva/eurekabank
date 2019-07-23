@@ -7,6 +7,7 @@ package logica;
 
 import datos.ClienteDAL;
 import entidades.Cliente;
+import entidades.Cuenta;
 import java.util.ArrayList;
 
 /**
@@ -18,5 +19,10 @@ public class ClienteBL {
         ArrayList<Cliente> arrayClientes;
         arrayClientes = ClienteDAL.buscarCliente(busqueda);
         return arrayClientes;
+    }
+    
+    public static ArrayList<Cuenta> getCuentas(Cliente cliente) {
+        ArrayList<Cuenta> arrayCuentas = ClienteDAL.cuentaCliente(cliente);
+        return arrayCuentas;
     }
 }
