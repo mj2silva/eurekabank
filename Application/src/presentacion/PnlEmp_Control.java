@@ -6,6 +6,7 @@
 package presentacion;
 
 import java.awt.BorderLayout;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -50,6 +51,11 @@ public class PnlEmp_Control extends javax.swing.JPanel {
 
         btnEliminarEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/EmpleadoBuscar72.png"))); // NOI18N
         btnEliminarEmpleado.setToolTipText("ELIMINAR");
+        btnEliminarEmpleado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnEliminarEmpleadoMouseClicked(evt);
+            }
+        });
 
         btnCuentasRegistradas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/EmpleadoEliminar72.png"))); // NOI18N
         btnCuentasRegistradas.setToolTipText("ESTADO DE CUENTA");
@@ -99,6 +105,11 @@ public class PnlEmp_Control extends javax.swing.JPanel {
         FrmAdministrador.PanelAdministrador.revalidate();
         FrmAdministrador.PanelAdministrador.repaint();
     }//GEN-LAST:event_btnRegistrarEmpleadoMouseClicked
+
+    private void btnEliminarEmpleadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEliminarEmpleadoMouseClicked
+        // TODO add your handling code here:
+        String busqueda=JOptionPane.showInputDialog(null, "Buscar empleado: ", "Busqueda", 3);
+    }//GEN-LAST:event_btnEliminarEmpleadoMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -80,6 +80,9 @@
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="ESTADO DE CUENTA"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnEstadoCuentaMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="btnEliminarCliente1">
       <Properties>
@@ -88,6 +91,9 @@
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="BUSCAR CLIENTE"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnEliminarCliente1MouseClicked"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

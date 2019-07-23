@@ -61,8 +61,13 @@ public class FrmGestionCliente extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaCuentas1 = new javax.swing.JTable();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        menuDeposito = new javax.swing.JMenuItem();
+        menuTransferencia = new javax.swing.JMenuItem();
+        menuRetiro = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         pnlDatosCliente.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -334,6 +339,36 @@ public class FrmGestionCliente extends javax.swing.JFrame {
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 290, 550, 240));
 
+        jMenu1.setText("OPERACIONES");
+
+        menuDeposito.setText("DEPÓSITO");
+        menuDeposito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuDepositoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menuDeposito);
+
+        menuTransferencia.setText("TRANSFERENCIA");
+        menuTransferencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuTransferenciaActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menuTransferencia);
+
+        menuRetiro.setText("RETIRO");
+        menuRetiro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRetiroActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menuRetiro);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -361,6 +396,24 @@ public class FrmGestionCliente extends javax.swing.JFrame {
         txtDni.setEditable(false); cbxCiudad.setEnabled(false); txtDireccion.setEditable(false); 
         txtTelefono.setEditable(false); txtEmail.setEditable(false);
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void menuDepositoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDepositoActionPerformed
+        // TODO add your handling code here:
+        FrmDeposito FrmDep = new FrmDeposito();
+        FrmDep.setVisible(true);
+    }//GEN-LAST:event_menuDepositoActionPerformed
+
+    private void menuTransferenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTransferenciaActionPerformed
+        // TODO add your handling code here:
+        FrmTransferencia FrmTransf = new FrmTransferencia();
+        FrmTransf.setVisible(true);
+    }//GEN-LAST:event_menuTransferenciaActionPerformed
+
+    private void menuRetiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRetiroActionPerformed
+        // TODO add your handling code here:
+        FrmRetiro FrmRet = new FrmRetiro();
+        FrmRet.setVisible(true);
+    }//GEN-LAST:event_menuRetiroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -416,10 +469,15 @@ public class FrmGestionCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JMenuItem menuDeposito;
+    private javax.swing.JMenuItem menuRetiro;
+    private javax.swing.JMenuItem menuTransferencia;
     private javax.swing.JPanel pnlDatosCliente;
     private javax.swing.JTable tablaCuentas;
     private javax.swing.JTable tablaCuentas1;

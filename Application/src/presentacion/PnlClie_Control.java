@@ -6,6 +6,7 @@
 package presentacion;
 
 import java.awt.BorderLayout;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -51,9 +52,19 @@ public class PnlClie_Control extends javax.swing.JPanel {
 
         btnEstadoCuenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/ClienteAceptar72.png"))); // NOI18N
         btnEstadoCuenta.setToolTipText("ESTADO DE CUENTA");
+        btnEstadoCuenta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnEstadoCuentaMouseClicked(evt);
+            }
+        });
 
         btnEliminarCliente1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/ClienteBuscar72.png"))); // NOI18N
         btnEliminarCliente1.setToolTipText("BUSCAR CLIENTE");
+        btnEliminarCliente1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnEliminarCliente1MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -94,6 +105,17 @@ public class PnlClie_Control extends javax.swing.JPanel {
         FrmAdministrador.PanelAdministrador.revalidate();
         FrmAdministrador.PanelAdministrador.repaint();
     }//GEN-LAST:event_btnRegistrarClienteMouseClicked
+
+    private void btnEstadoCuentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEstadoCuentaMouseClicked
+        // TODO add your handling code here:
+        FrmGestionCliente FrmGestClie = new FrmGestionCliente();
+        FrmGestClie.setVisible(true);
+    }//GEN-LAST:event_btnEstadoCuentaMouseClicked
+
+    private void btnEliminarCliente1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEliminarCliente1MouseClicked
+        // TODO add your handling code here:
+        String busqueda=JOptionPane.showInputDialog(null, "Buscar cliente: ", "Busqueda", 3);
+    }//GEN-LAST:event_btnEliminarCliente1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
