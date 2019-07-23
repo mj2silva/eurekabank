@@ -12,9 +12,15 @@ public class Empleado extends Persona{
     
     private Asignado asignado;
 
-    public Empleado(Asignado asignado, int codigo, String paterno, String materno, String nombre, String ciudad, String direccion, String usuaID, String password) {
-        super(codigo, paterno, materno, nombre, ciudad, direccion, usuaID, password);
+    public Empleado(Asignado asignado, int codigo, String paterno, String materno, String nombre, String ciudad, String direccion, String email) {
+        super(codigo, paterno, materno, nombre, ciudad, direccion, email);
         this.asignado = asignado;
+        super.setTipo("empleado");
+    }
+
+    public Empleado(int codigo, String paterno, String materno, String nombre, String ciudad, String direccion, String email) {
+        super(codigo, paterno, materno, nombre, ciudad, direccion, email);
+        super.setTipo("empleado");
     }
 
     public Asignado getAsignado() {

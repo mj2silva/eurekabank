@@ -8,8 +8,7 @@ package datos;
 import entidades.FactoriaUsuarios;
 import entidades.Usuario;
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  *
@@ -36,7 +35,7 @@ public class UsuarioDAL {
                 }
             }
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(UsuarioDAL.class.getName()).log(Level.SEVERE, null, ex);
+            showMessageDialog(null, ex.getMessage(),"Excepcion", 0);
         }
         
         return verificado;
@@ -47,20 +46,23 @@ public class UsuarioDAL {
         if (verificarUsuario(login, password)) {
             try {
                 String tipo = "";
+                int id = 0;
                 cn = Conexion.establecerConexion();
                 st = cn.createStatement();
-                String sql = "{call sp_obtenertipo(?)}";
+                String sql = "{call sp_obtenerusuario(?, ?)}";
                 ps = cn.prepareStatement(sql);
                 ps.setString(1, login);
+                ps.setString(2, password);
                 
                 rs = ps.executeQuery();
                 if(rs.next()) {
-                    tipo = rs.getString(1);
+                    id = rs.getInt(1);
+                    tipo = rs.getString(4);
                 }
                 
-                usuario = FactoriaUsuarios.getUsuario(tipo);
+                usuario = FactoriaUsuarios.getUsuario(tipo, id, login, password);
             } catch (ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(UsuarioDAL.class.getName()).log(Level.SEVERE, null, ex);
+                showMessageDialog(null, ex.getMessage(),"Excepcion", 0);
             }
         }
         return usuario;

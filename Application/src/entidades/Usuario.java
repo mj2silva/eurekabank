@@ -14,6 +14,7 @@ public abstract class Usuario {
     protected String login;
     protected String password;
     protected String usuaTipo;
+    protected Persona persona;
 
     public Usuario(int id, String login, String password, String usuaTipo) {
         this.id = id;
@@ -23,9 +24,8 @@ public abstract class Usuario {
     }
 
     public Usuario() {
-        this(0,"","","");
     }
-
+    
     public int getId() {
         return id;
     }
@@ -56,6 +56,14 @@ public abstract class Usuario {
 
     public void setUsuaTipo(String usuaTipo) {
         this.usuaTipo = usuaTipo;
+    }
+
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
     }
 
     

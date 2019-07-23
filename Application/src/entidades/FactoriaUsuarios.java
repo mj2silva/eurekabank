@@ -5,17 +5,21 @@
  */
 package entidades;
 
+import datos.EmpleadoDAL;
+
 /**
  *
  * @author SERIN
  */
 public class FactoriaUsuarios {
-    public static Usuario getUsuario(String usuaTipo){
-        if (usuaTipo.equals("Admin")||usuaTipo.equals("Empleado")) {
-            return new UsuarioEmpleado();
+    public static Usuario getUsuario(String tipo, int id, String login, String password){
+        
+        
+        if (tipo.equals("admin")||tipo.equals("empleado")) {
+            return new UsuarioEmpleado(id, login, password, tipo);
         }
         else {
-            return new UsuarioCliente();
+            return new UsuarioCliente(id, login, password, tipo);
         }
     }
 }

@@ -5,30 +5,16 @@
  */
 package entidades;
 
+import datos.EmpleadoDAL;
+
 /**
  *
  * @author manue
  */
 public class UsuarioEmpleado extends Usuario {
-
-    private Empleado empleado;
-
-    public UsuarioEmpleado() {
-        this.empleado = null;
-    }
-    
-    
-    public UsuarioEmpleado(int id, String login, String password, String tipo, Empleado empleado) {
-        super(id, login, password, tipo);
-        this.empleado = empleado;
-    }
-
-    public Empleado getEmpleado() {
-        return empleado;
-    }
-
-    public void setEmpleado(Empleado empleado) {
-        this.empleado = empleado;
+    public UsuarioEmpleado(int id, String login, String password, String tipo) {
+        super(id, login, password, "empleado");
+        this.persona = EmpleadoDAL.obtenerEmpleado(id);
     }
     
 }

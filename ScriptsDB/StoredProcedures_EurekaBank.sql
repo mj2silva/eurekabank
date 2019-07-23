@@ -374,3 +374,15 @@ begin
 	select usuatipo from usuario where login = login;
 end;
 //
+alter table sucursal
+drop column sucucontcuenta;
+
+delimiter //
+create procedure sp_obtenerusuario(login varchar(100), upassword varchar(60))
+begin
+	select * from usuario where usualogin = login and usuapassword = upassword;
+end;
+//
+
+
+
