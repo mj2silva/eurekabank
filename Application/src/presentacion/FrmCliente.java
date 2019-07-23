@@ -5,23 +5,26 @@
  */
 package presentacion;
 
-import java.awt.BorderLayout;
+import entidades.Cliente;
+import entidades.Usuario;
 
 /**
  *
  * @author SERIN
  */
 public class FrmCliente extends javax.swing.JFrame {
-
+    
+    private Usuario usuario;
     /**
      * Creates new form FrmAdministrador
      */
-    public FrmCliente() {
+    public FrmCliente(Usuario usuario) {
         
         initComponents();
         txtUsuario.setText(Login.ID);
         this.setLocationRelativeTo(null);
         PanelAdministrador.setVisible(false);
+        this.usuario = usuario;
     }
 
     /**
@@ -183,7 +186,7 @@ public class FrmCliente extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmCliente().setVisible(true);
+                //new FrmCliente(this.empleado).setVisible(true);
             }
         });
         

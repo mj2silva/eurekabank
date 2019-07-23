@@ -27,7 +27,7 @@ public class UsuarioDAL {
         try {
             cn = Conexion.establecerConexion();
             st = cn.createStatement();
-            String sql = "select fn_verificarusuario(" + login + "," + password + ")";
+            String sql = "select fn_verificarusuario('" + login + "','" + password + "')";
             rs = st.executeQuery(sql);
             if(rs.next()) {
                 if (rs.getInt(1) == 1) {

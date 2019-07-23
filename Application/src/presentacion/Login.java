@@ -97,13 +97,25 @@ public class Login extends javax.swing.JFrame {
             PASSWORD = txtPASS.getText();
             
             Usuario usuario = UsuarioBL.iniciarSesion(ID, PASSWORD);
-            showMessageDialog(null, usuario.getUsuaTipo());
-            if (usuario.getUsuaTipo().equals("cliente")) {
-                FrmCliente frmCliente = new FrmCliente();
-                frmCliente.setVisible(true);
-            } else if (usuario.getUsuaTipo().equals("administrador")) {
-                FrmAdministrador frmAdministrador = new FrmAdministrador();
-                frmAdministrador.setVisible(true);
+            
+            switch (usuario.getUsuaTipo()) {
+                case "cliente":
+                    FrmCliente frmCliente = new FrmCliente(usuario);
+                    frmCliente.setVisible(true);
+                    this.dispose();
+                    break;
+                case "administrador":
+                    FrmAdministrador frmAdministrador = new FrmAdministrador(usuario);
+                    frmAdministrador.setVisible(true);
+                    this.dispose();
+                    break;
+                case "empleado":
+                    FrmEmpleado frmEmpleado = new FrmEmpleado(usuario);
+                    frmEmpleado.setVisible(true);
+                    this.dispose();
+                    break;
+                default:
+                    break;
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());

@@ -5,6 +5,7 @@
  */
 package presentacion;
 
+import entidades.Usuario;
 import java.awt.BorderLayout;
 
 /**
@@ -12,17 +13,19 @@ import java.awt.BorderLayout;
  * @author SERIN
  */
 public class FrmAdministrador extends javax.swing.JFrame {
-
+    
+    private Usuario usuario;
     /**
      * Creates new form FrmAdministrador
      */
-    public FrmAdministrador() {
+    public FrmAdministrador(Usuario usuario) {
         initComponents();
         txtUsuario.setText(Login.ID);
         this.setLocationRelativeTo(null);
         PanelAdministrador.setVisible(false);
         PanelControl.setVisible(false);
         jScrollPane1.setVisible(false);
+        this.usuario = usuario;
     }
 
     /**
@@ -101,6 +104,11 @@ public class FrmAdministrador extends javax.swing.JFrame {
         getContentPane().add(lblUsuario1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 430, -1, -1));
 
         PanelControl.setOpaque(false);
+        PanelControl.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                PanelControlPropertyChange(evt);
+            }
+        });
 
         javax.swing.GroupLayout PanelControlLayout = new javax.swing.GroupLayout(PanelControl);
         PanelControl.setLayout(PanelControlLayout);
@@ -199,7 +207,7 @@ public class FrmAdministrador extends javax.swing.JFrame {
         // TODO add your handling code here:
         PanelAdministrador.setVisible(false);
         jScrollPane1.setVisible(true);
-        PnlClie_Control clieControl = new PnlClie_Control();
+        PnlClie_Control clieControl = new PnlClie_Control(tablaAdministrador);
         clieControl.setSize(440,80);
         clieControl.setLocation(0,0);
         PanelControl.setVisible(true);
@@ -208,7 +216,7 @@ public class FrmAdministrador extends javax.swing.JFrame {
         PanelControl.revalidate();
         PanelControl.repaint();
     }//GEN-LAST:event_btnClienteMouseClicked
-
+    
     private void btnEmpleadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEmpleadoMouseClicked
         // TODO add your handling code here:
         PanelAdministrador.setVisible(false);
@@ -222,6 +230,10 @@ public class FrmAdministrador extends javax.swing.JFrame {
         PanelControl.revalidate();
         PanelControl.repaint();
     }//GEN-LAST:event_btnEmpleadoMouseClicked
+
+    private void PanelControlPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_PanelControlPropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_PanelControlPropertyChange
 
     /**
      * @param args the command line arguments
@@ -253,7 +265,7 @@ public class FrmAdministrador extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmAdministrador().setVisible(true);
+                //new FrmAdministrador().setVisible(true);
             }
         });
         

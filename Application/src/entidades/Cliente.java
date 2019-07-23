@@ -10,10 +10,12 @@ package entidades;
  */
 public class Cliente extends Persona{
     private String telefono;
+    private String dni;
 
-    public Cliente(String telefono, int codigo, String paterno, String materno, String nombre, String ciudad, String direccion, String email) {
+    public Cliente(String telefono, int codigo, String paterno, String materno, String nombre, String dni, String ciudad, String direccion, String email) {
         super(codigo, paterno, materno, nombre, ciudad, direccion, email);
         this.telefono = telefono;
+        this.dni = dni;
         super.setTipo("cliente");
     }
 
@@ -25,12 +27,12 @@ public class Cliente extends Persona{
         this.telefono = telefono;
     }
 
-    public String getEmail() {
-        return email;
+    public String getDni() {
+        return dni;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setDni(String dni) {
+        this.dni = dni;
     }
     
     

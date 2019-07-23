@@ -5,7 +5,13 @@
  */
 package presentacion;
 
+import entidades.Cliente;
+import entidades.Usuario;
 import java.awt.BorderLayout;
+import java.util.ArrayList;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import logica.ClienteBL;
 
 /**
  *
@@ -16,13 +22,25 @@ public class FrmEmpleado extends javax.swing.JFrame {
     /**
      * Creates new form FrmAdministrador
      */
-    public FrmEmpleado() {
+    public static DefaultTableModel modelo;
+    public Usuario usuario;
+    
+    public FrmEmpleado(Usuario usuario) {
         initComponents();
         txtUsuario.setText(Login.ID);
         this.setLocationRelativeTo(null);
         PanelAdministrador.setVisible(false);
         PanelControl.setVisible(false);
         jScrollPane1.setVisible(false);
+        this.usuario = usuario;
+        modelo = new DefaultTableModel();
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Ap. Paterno");
+        modelo.addColumn("Ap. Materno");
+        modelo.addColumn("DNI");
+        modelo.addColumn("Código");
+        
+        tablaClientes.setModel(modelo);
     }
 
     /**
@@ -41,7 +59,7 @@ public class FrmEmpleado extends javax.swing.JFrame {
         lblUsuario1 = new javax.swing.JLabel();
         PanelControl = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaAdministrador = new javax.swing.JTable();
+        tablaClientes = new javax.swing.JTable();
         Wallpaper = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         btnCliente = new javax.swing.JMenu();
@@ -101,6 +119,11 @@ public class FrmEmpleado extends javax.swing.JFrame {
         getContentPane().add(lblUsuario1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 430, -1, -1));
 
         PanelControl.setOpaque(false);
+        PanelControl.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                PanelControlPropertyChange(evt);
+            }
+        });
 
         javax.swing.GroupLayout PanelControlLayout = new javax.swing.GroupLayout(PanelControl);
         PanelControl.setLayout(PanelControlLayout);
@@ -113,22 +136,26 @@ public class FrmEmpleado extends javax.swing.JFrame {
             .addGap(0, 80, Short.MAX_VALUE)
         );
 
-        getContentPane().add(PanelControl, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 410, 440, 80));
+        getContentPane().add(PanelControl, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 410, 440, 80));
 
-        tablaAdministrador.setModel(new javax.swing.table.DefaultTableModel(
+        tablaClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Título 1", "Título 2", "Título 3", "Título 4"
+                "Nombre", "Apellido Paterno", "Apellido Materno", "DNI", "Código"
             }
-        ));
-        tablaAdministrador.setOpaque(false);
-        jScrollPane1.setViewportView(tablaAdministrador);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaClientes.setOpaque(false);
+        jScrollPane1.setViewportView(tablaClientes);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 410));
 
@@ -168,10 +195,10 @@ public class FrmEmpleado extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
         Login FrmP = new Login();
-        Login.ID=null;
-        Login.PASSWORD=null;
-        Login.TYPE_USER=null;
-        Login.COD=null;
+        Login.ID = null;
+        Login.PASSWORD = null;
+        Login.TYPE_USER = null;
+        Login.COD = null;
         FrmP.setVisible(true);
     }//GEN-LAST:event_btnCerrarSesionMouseClicked
 
@@ -179,7 +206,7 @@ public class FrmEmpleado extends javax.swing.JFrame {
         // TODO add your handling code here:
         PanelAdministrador.setVisible(false);
         jScrollPane1.setVisible(true);
-        PnlClie_Control clieControl = new PnlClie_Control();
+        PnlClie_Control clieControl = new PnlClie_Control(tablaClientes);
         clieControl.setSize(440,80);
         clieControl.setLocation(0,0);
         PanelControl.setVisible(true);
@@ -187,6 +214,9 @@ public class FrmEmpleado extends javax.swing.JFrame {
         PanelControl.add(clieControl,BorderLayout.CENTER);
         PanelControl.revalidate();
         PanelControl.repaint();
+        
+        
+        
     }//GEN-LAST:event_btnClienteMouseClicked
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -194,6 +224,10 @@ public class FrmEmpleado extends javax.swing.JFrame {
         FrmDeposito FrmDep = new FrmDeposito();
         FrmDep.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void PanelControlPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_PanelControlPropertyChange
+        
+    }//GEN-LAST:event_PanelControlPropertyChange
 
     /**
      * @param args the command line arguments
@@ -226,7 +260,7 @@ public class FrmEmpleado extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmEmpleado().setVisible(true);
+                //new FrmEmpleado().setVisible(true);
             }
         });
         
@@ -244,7 +278,22 @@ public class FrmEmpleado extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JLabel lblUsuario1;
-    private javax.swing.JTable tablaAdministrador;
+    public javax.swing.JTable tablaClientes;
     private javax.swing.JLabel txtUsuario;
     // End of variables declaration//GEN-END:variables
+
+    public static void llenarTabla(String busqueda) {
+        modelo.setRowCount(0);
+        ArrayList<Cliente> arrayClientes;
+        arrayClientes = ClienteBL.buscarCliente(busqueda);
+        
+        for (int i = 0; i < arrayClientes.size(); i++) {
+            modelo.addRow(new Object[]{arrayClientes.get(i).getNombre()});
+            modelo.addRow(new Object[]{arrayClientes.get(i).getPaterno()});
+            modelo.addRow(new Object[]{arrayClientes.get(i).getMaterno()});
+            modelo.addRow(new Object[]{arrayClientes.get(i).getDni()});
+            modelo.addRow(new Object[]{arrayClientes.get(i).getCodigo()});
+        }
+        
+    }
 }

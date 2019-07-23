@@ -5,20 +5,28 @@
  */
 package presentacion;
 
+import entidades.Cliente;
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import logica.ClienteBL;
+import static presentacion.FrmEmpleado.modelo;
 
 /**
  *
  * @author COMPAQ
  */
 public class PnlClie_Control extends javax.swing.JPanel {
-
+    public String busqueda;
+    public JTable table;
     /**
      * Creates new form PnlClie_Control
      */
-    public PnlClie_Control() {
+    public PnlClie_Control(JTable table) {
+        
         initComponents();
+        this.table = table;
     }
 
     /**
@@ -33,7 +41,7 @@ public class PnlClie_Control extends javax.swing.JPanel {
         btnRegistrarCliente = new javax.swing.JLabel();
         btnEliminarCliente = new javax.swing.JLabel();
         btnEstadoCuenta = new javax.swing.JLabel();
-        btnEliminarCliente1 = new javax.swing.JLabel();
+        btnBuscarCliente = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(440, 94));
         setMinimumSize(new java.awt.Dimension(440, 94));
@@ -58,11 +66,11 @@ public class PnlClie_Control extends javax.swing.JPanel {
             }
         });
 
-        btnEliminarCliente1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/ClienteBuscar72.png"))); // NOI18N
-        btnEliminarCliente1.setToolTipText("BUSCAR CLIENTE");
-        btnEliminarCliente1.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnBuscarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/ClienteBuscar72.png"))); // NOI18N
+        btnBuscarCliente.setToolTipText("BUSCAR CLIENTE");
+        btnBuscarCliente.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnEliminarCliente1MouseClicked(evt);
+                btnBuscarClienteMouseClicked(evt);
             }
         });
 
@@ -76,7 +84,7 @@ public class PnlClie_Control extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(btnRegistrarCliente)
                 .addGap(18, 18, 18)
-                .addComponent(btnEliminarCliente1)
+                .addComponent(btnBuscarCliente)
                 .addGap(18, 18, 18)
                 .addComponent(btnEliminarCliente)
                 .addContainerGap(49, Short.MAX_VALUE))
@@ -86,7 +94,7 @@ public class PnlClie_Control extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnEliminarCliente1)
+                    .addComponent(btnBuscarCliente)
                     .addComponent(btnEstadoCuenta)
                     .addComponent(btnEliminarCliente)
                     .addComponent(btnRegistrarCliente))
@@ -112,16 +120,33 @@ public class PnlClie_Control extends javax.swing.JPanel {
         FrmGestClie.setVisible(true);
     }//GEN-LAST:event_btnEstadoCuentaMouseClicked
 
-    private void btnEliminarCliente1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEliminarCliente1MouseClicked
+    private void btnBuscarClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBuscarClienteMouseClicked
         // TODO add your handling code here:
-        String busqueda=JOptionPane.showInputDialog(null, "Buscar cliente: ", "Busqueda", 3);
-    }//GEN-LAST:event_btnEliminarCliente1MouseClicked
+        busqueda = JOptionPane.showInputDialog(null, "Buscar cliente: ", "Busqueda", 3);
+        llenarTabla(busqueda);
+    }//GEN-LAST:event_btnBuscarClienteMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel btnBuscarCliente;
     private javax.swing.JLabel btnEliminarCliente;
-    private javax.swing.JLabel btnEliminarCliente1;
     private javax.swing.JLabel btnEstadoCuenta;
     private javax.swing.JLabel btnRegistrarCliente;
     // End of variables declaration//GEN-END:variables
+
+    private void llenarTabla(String busqueda) {
+        modelo.setRowCount(0);
+        ArrayList<Cliente> arrayClientes;
+        arrayClientes = ClienteBL.buscarCliente(busqueda);
+        
+        for (int i = 0; i < arrayClientes.size(); i++) {
+            modelo.addRow(new Object[]{
+                arrayClientes.get(i).getNombre(),
+                arrayClientes.get(i).getPaterno(),
+                arrayClientes.get(i).getMaterno(),
+                arrayClientes.get(i).getDni(),
+                arrayClientes.get(i).getCodigo()
+            });
+        }
+    }
 }
