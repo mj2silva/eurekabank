@@ -173,3 +173,8 @@ insert into Contador Values( 'Empleado', 11, 4 );
 insert into Contador Values( 'Asignado', 11, 6 );
 insert into Contador Values( 'Parametro', 2, 3 );
 insert into Contador Values( 'Cliente', 21, 5 );
+
+call sp_insertarAdmin('Silva', 'Guevara', 'Manuel', 'Trujillo', 'Trujillo', 'msilva@eurekabank', 1);
+call sp_insertarAdmin('Serin', 'Nery', 'Eliasib', 'Trujillo', 'Trujillo', 'eserin@eurekabank', 2);
+call sp_insertarAdmin('Reyes', 'Julca', 'Steven', 'Trujillo', 'Trujillo', 'sreyes@eurekabank', 3);
+call sp_insertarAdmin('Zavaleta', 'Cortez', 'Jeyson', 'Trujillo', 'Trujillo', 'jzavaleta@eurekabank', 4);

@@ -338,6 +338,17 @@ CREATE TRIGGER tr_updateusuariosid AFTER INSERT ON usuario
 				emplEmail = NEW.usuaLogin;
 		END IF;
     END;
-    
+//
 
+-- crear una cuenta
+delimiter //
+create procedure sp_nuevacuenta(cuencodigo char(8), monecodigo integer, sucucodigo integer, emplcreacuenta integer, cliecodigo integer, cuensaldo decimal)
+begin
+	declare fechahoy date;
+    set fechahoy = now();
+	insert into 
+		cuenta 
+	values 
+		(cuencodigo, monecodigo, sucucodigo, emplcreacuenta, cliecodigo, cuensaldo, fechahoy, 'ACTIVO', 0, '123456');
+end
 //

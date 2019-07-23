@@ -1,175 +1,376 @@
 -- procedimientos almacenados
 
--- crear una cuenta
-delimiter //
-create procedure sp_nuevacuenta(cuencodigo char(8), monecodigo integer, sucucodigo integer, emplcreacuenta integer, cliecodigo integer, cuensaldo decimal)
-begin
-	declare fechahoy date;
-    set fechahoy = now();
-	insert into 
-		cuenta 
-	values 
-		(cuencodigo, monecodigo, sucucodigo, emplcreacuenta, cliecodigo, cuensaldo, fechahoy, 'ACTIVO', 0, '123456');
-end
-//
+-- funcion que devuelve el administrador de una sucursal (se le pasa por parámetro el código de la sucursal
 
--- hacer transferencia
+delimiter //
+create function fn_getidadministrador(sucursal integer)
+	returns integer
+begin
+	declare admincodigo integer;
+    
+	select 
+		e.emplcodigo
+	into 
+		admincodigo
+    from 
+		empleado e join asignado a
+        on e.emplcodigo = a.emplcodigo
+        join sucursal s 
+        on a.sucucodigo = s.sucucodigo 
+        join usuario u
+        on u.usuaid = e.usuaid
+	where 
+		u.usuatipo = 'admin' and s.sucucodigo = sucursal;
+        
+	return admincodigo;
+end;
+// -- implemented
+
+delimiter //
+create function fn_administradordelempleado(emplcodigo integer)
+	returns integer
+begin
+	declare admincodigo integer;
+    declare sucucodigo integer;
+    
+    select s.sucucodigo
+    into sucucodigo
+    from sucursal s
+    join asignado 
+    on s.sucucodigo = a.sucucodigo
+    join empleado e
+    on a.emplcodigo = e.emplcodigo;
+    
+	set admincodigo = fn_getidiadministrador(sucucodigo);
+    
+    return admincodigo;
+end;
+// -- implemented
+
+-- función que cuenta el número de movimientos de una cuenta, se le pasa el numero de cuenta por parámetro
+delimiter //
+create function fn_numerodemovimientosdelacuenta(cuencodigo char(8))
+	returns integer
+begin
+	declare nromovimientos integer;
+    
+	select count(cuencodigo)
+    into nromovimientos
+    from movimiento m
+    where 
+		m.cuencodigo = cuencodigo and (m.tipocodigo = 3 or m.tipocodigo = 4 or m.tipocodigo = 9)
+    group by cuencodigo;
+    
+	return nromovimientos;
+end;
+// -- implemented
+
+delimiter //
+create function fn_obtenersaldodecuenta(cuencodigo char(8))
+	returns decimal
+begin
+	declare saldocuenta integer;
+    
+    select c.cuensaldo
+    into saldocuenta
+    from cuenta c 
+    where c.cuencodigo = cuentadestino;
+    
+    return saldocuenta;
+end;
+// -- implemented
+
+-- calcula el cargo a cobrar en una cuenta
+delimiter //
+create function fn_calcularcargo(cuencodigo char(8))
+	returns decimal
+begin
+	declare cargo decimal;
+    declare nromovimientos integer;
+    declare maxtransacciones integer;
+    declare monecodigo integer;
+    
+    set cargo = 0;
+    set nromovimientos = fn_numerodemovimientosdelacuenta(cuentaorigen);
+    set maxtransacciones = fn_obtenertransaccionesmax();
+	
+    if nromovimientos > maxtransacciones then
+		select c.monecodigo
+        into monecodigo
+		from cuenta c
+		where c.cuencodigo = cuencodigo;
+			
+		select cm.costoimporte
+		into cargo
+		from costomovimiento cm
+		join moneda m
+		on cm.monecodigo = m.monecodigo
+		where m.monecodigo = monecodigo;
+        
+    end if;
+    
+    return cargo;
+end;
+// -- implemented
+
+delimiter //
+create function fn_obteneritf()
+	returns decimal
+begin
+	declare itf decimal;
+    
+    select convert(paravalor, decimal(6,2))
+    into itf
+    from parametro
+    where paracodigo = 1;
+    
+    return itf;
+end;
+// -- implemented
+
+delimiter //
+create function fn_obtenertransaccionesmax()
+	returns integer
+begin
+	declare maxtransacciones integer;
+    
+	select convert(paravalor, unsigned)
+    into maxtransacciones
+    from parametro
+    where paracodigo = 2;
+    
+    return maxtransacciones;
+end;
+// -- implemented
+
+delimiter //
+create procedure sp_nuevomovimento(cuencodigo char(8))
+begin
+	declare cuentamovimientos integer;
+    
+	select c.cuencontmov
+    into cuentamovimientos
+    from cuenta c
+    where c.cuencodigo = cuencodigo;
+    
+    set cuentamovimientos = cuentamovimientos + 1;
+    update cuenta set cuencontmov = cuentamovimientos
+    where c.cuencodigo = cuencodigo;
+    
+end;
+// -- implemented
 
 -- deposito en cuenta propia --considera convertir a procedimiento almacenado (dos movimientos, uno de entrada y otro de salida de dinero)
 delimiter //
-create procedure sp_depositoencuentapropia(cuentaorigen char(8), cuentadestino char(8), emplcodigo integer, tipocodigo integer, importe decimal)
+create procedure sp_transaccionbancaria(cuentaorigen char(8), cuentadestino char(8), emplcodigo integer, importe decimal)
 begin
-	insert into 
-end
-//
-
-delimiter //
-create trigger t_depositoencuentapropia
-after insert on movimiento
-for each row
-begin
-    select @nromovimientos = count(cuencodigo) 
-    from movimiento 
-    where cuencodigo = new.cuencodigo 
-    group by cuencodigo;
+    declare cargo decimal;
+    declare saldoorigen decimal;
+    declare saldodestino decimal;
+    declare fechahoy date;
+    declare admincodigo integer;
+    declare montoitf decimal;
     
-    select @emplcodigo = e.emplcodigo
-    from empleado e join
-		asignado a
-        on e.emplcodigo = a.emplcodigo
-        join
-		sucursal s 
-        on a.sucucodigo = s.sucucodigo 
-        join
-        usuario u
-        on u.usuaid = e.usuaid
-        join cuenta c
-        on c.sucucodigo = s.sucucodigo
-        where u.usuatipo = 'admin' and
-		c.cuencodigo = new.cuencodigo;
-    
-    select @monecodigo = c.monecodigo
-    from cuenta c
-    where c.cuencodigo = new.cuencodigo;
-    
-    select @cargo = cm.costoimporte
-    from costomovimiento cm
-    join moneda m
-    on cm.monecodigo = m.monecodigo
-    where m.monecodigo = @monecodigo;
-    
-    select @cuensaldoorigen = c.cuensaldo
-    from cuenta c 
-    where c.cuencodigo = new.cuencodigo;
-    
-    select @cuensaldodestino = c.cuensaldo
-    from cuenta c
-    where c.cuencodigo = new.cuenreferencia;
+    set cargo = fn_calcularcargo(cuentaorigen);
+    set saldoorigen = fn_obtenersaldocuenta(cuentaorigen);
+    set saldodestino = fn_obtenersaldocuenta(cuentadestino);
+    set fechahoy = now();
+    set admincodigo = fn_administradordelempleado(emplcodigo);
+    set montoitf = importe * fn_obteneritf();
     
     start transaction;
     
-    if @nromovimientos > 15 and new.tipocodigo = 9 then
+    insert into movimiento(cuencodigo, movifecha, emplcodigo, tipocodigo, moviimporte, cuenreferencia)
+    values (cuentaorigen, fechahoy, emplcodigo, 9, importe, cuentadestino);
+    
+    call sp_nuevomovimiento(cuentaorigen);
+    
+    insert into movimiento(cuencodigo, movifecha, emplcodigo, tipocodigo, moviimporte, cuenreferencia)
+    values (cuentadestino, fechahoy, emplcodigo, 8, importe - montoitf, cuentaorigen); -- a la cuenta destino llega solo el 99.92% del importe enviado
+    
+    insert into movimiento(cuencodigo, movifecha, emplcodigo, tipocodigo, moviimporte, cuenreferencia)
+    values (cuentaorigen, fechahoy, admincodigo, 10, cargo, null);
+    
+    insert into movimiento(cuencodigo, movifecha, emplcodigo, tipocodigo, moviimporte, cuenreferencia)
+    values (cuentaorigen, fechahoy, admincodigo, 7, montoitf, null);
+    
+    update cuenta set cuensaldo = saldoorigen - importe - cargo where cuencodigo = cuentaorigen;
+    update cuenta set cuensaldo = saldoorigen + importe - montoitf where cuencodigo = cuentadestino;
+    
+    if saldoorigen - importe - cargo < 0 then
+		rollback;
+    else
+		commit;
+	end if;
+	
+    commit;
+end;
+// -- implemented
+
+delimiter //
+create procedure sp_deposito(cuentadestino char(8), importe decimal, emplcodigo integer)
+begin
+	declare cargo decimal;
+    declare saldoinicial decimal;
+    declare admincodigo integer;
+    declare fechahoy date;
+    
+    set fechahoy = now();
+    set cargo = fn_calcularcargo(cuentadestino);
+    set admincodigo = fn_administradordelempleado(emplcodigo);
+    set saldoinicial = fn_obtenersaldocuenta(cuentadestino);
+    
+    start transaction;
+    
+    insert into movimiento(cuencodigo, movifecha, emplcodigo, tipocodigo, moviimporte, cuenreferencia)
+    values (cuentadestino, fechahoy, emplcodigo, 3, importe, null);
+    call sp_nuevomovimiento(cuentadestino);
+    
+    if cargo > 0 then
 		insert into movimiento(cuencodigo, movifecha, emplcodigo, tipocodigo, moviimporte, cuenreferencia)
-        values (new.cuencodigo, now(), @emplcodigo, 10, @cargo, null);
+		values (cuentadestino, fechahoy, admincodigo, 10, cargo, null);
 	end if;
     
-    update cuenta set cuensaldo = @cuesaldoorigen - new.moviimporte where cuencodigo = @cuensaldoorigen;
-    update cuenta set cuensaldo = @cuesaldodestino + new.moviimporte where cuencodigo = @cuensaldodestino;
+    update cuenta set cuensaldo = saldoinicial + importe - cargo where cuencodigo = cuentadestino;
     
-end
-//
-
-delimiter //
-create procedure sp_depositoencuentapropia()
-begin
-	
-end
-//
-
--- deposito en ventanilla
-delimiter //
-create procedure sp_depositoencuentapropia()
-begin
-
-end
-//
+    if saldoinicial + importe - cargo < 0 then
+		rollback;
+    else
+		commit;
+	end if;
+end;
+// -- implemented
 
 -- retiro
 delimiter //
-create procedure sp_depositoencuentapropia()
+create procedure sp_retiro(cuentaorigen char(8), importe decimal, emplcodigo integer)
 begin
-
-end
-//
+	declare cargo decimal;
+    declare saldoinicial decimal;
+    declare admincodigo integer;
+    declare fechahoy date;
+    
+    set fechahoy = now();
+    set cargo = fn_calcularcargo(cuentaorigen);
+    set admincodigo = fn_administradordelempleado(emplcodigo);
+    set saldoinicial = fn_obtenersaldocuenta(cuentaorigen);
+    
+    start transaction;
+    
+    insert into movimiento(cuencodigo, movifecha, emplcodigo, tipocodigo, moviimporte, cuenreferencia)
+    values (cuentaorigen, fechahoy, emplcodigo, 4, importe, null);
+    call sp_nuevomovimiento(cuentaorigen);
+    
+    insert into movimiento(cuencodigo, movifecha, emplcodigo, tipocodigo, moviimporte, cuenreferencia)
+    values (cuentaorigen, fechahoy, admincodigo, 10, cargo, null);
+    
+    update cuenta set cuensaldo = saldoinicial - importe - cargo where cuencodigo = cuentaorigen;
+    
+    if saldoinicial - importe - cargo < 0 then
+		rollback;
+    else
+		commit;
+	end if;
+end;
+// -- implemented
 
 -- consultar cuenta
 delimiter //
-create procedure sp_depositoencuentapropia()
+create procedure sp_cuentacliente(cliecodigo integer)
 begin
-
-end
-//
+	select cuencodigo, monedescripcion, cuensaldo, cuenestado, cuencontmov
+    from cuenta c
+    join moneda m
+    on c.monecodigo = m.monecodigo
+    where c.cliecodigo = cliecodigo;
+end;
+// -- implemented
 
 -- historial de movimientos
 delimiter //
-create procedure sp_depositoencuentapropia()
+create procedure sp_historialdemovimientos(cuencodigo char(8))
 begin
+	select cuencodigo, movifecha, tipodescripcion, moviimporte, cuenreferencia 
+    from movimiento m join
+	tipomovimiento tm
+    on m.tipocodigo = tm.tipocodigo
+	where m.cuencodigo = cuencodigo;
+end;
+// -- implemented
 
-end
-//
-
--- agregar cliente
+-- nueva cuenta
 delimiter //
-create procedure sp_depositoencuentapropia()
+create procedure sp_nuevacuenta(cuencodigo char(8), cliecodigo integer, monecodigo integer, emplcodigo integer, importe decimal)
 begin
-
-end
-//
-
--- modifcar cliente
-delimiter //
-create procedure sp_depositoencuentapropia()
-begin
-
-end
-//
+	declare sucucodigo integer;
+    declare fechahoy date;
+    
+    set fechahoy = now();
+    select s.sucucodigo
+    into sucucodigo
+    from empleado e
+    join asignado a
+    on e.emplcodigo = a.emplcodigo
+    join sucursal on 
+    a.sucucodigo = s.sucucodigo
+    where e.emplcodigo = emplcodigo;
+    
+	insert into cuenta values (cuencodigo, monecodigo, sucucodigo, emplcodigo, cliecodigo, importe, fechahoy, 'ACTIVO', 0, '123456');
+    insert into movimiento values (cuencodigo, fechahoy, emplcodigo, 1, importe, null);
+end;
+// -- implemented
 
 -- buscar cliente
 delimiter //
-create procedure sp_depositoencuentapropia()
+create procedure sp_buscarcliente(str varchar(50))
 begin
-
-end
-//
-
+	declare pattern varchar(52);
+    set pattern = '%' + str + '%';
+	select * from cliente 
+    where 
+		cliepaterno like pattern or cliematerno like pattern or clienombre like pattern or
+        cliedni like pattern;
+end;
+// -- implemented
 -- eliminar cliente
 delimiter //
-create procedure sp_depositoencuentapropia()
+create procedure sp_eliminarcliente(codigo integer)
 begin
+	delete from cliente where cliecodigo = codigo;
+end;
+// -- implemented
 
-end
+delimiter //
+create function fn_verificarusuario(login varchar(100), upassword varchar(60))
+	returns boolean
+begin -- implemented
+	declare flaglogin boolean;
+    declare flagpassword boolean;
+    declare loginencontrado varchar(100);
+    declare passwordencontrado varchar(60);
+    
+    set flaglogin = false;
+    set flagpassword = false;
+    
+    select usualogin, usuapassword 
+    into loginencontrado, passwordencontrado
+    from usuario 
+    where usualogin = login;
+    
+    if loginencontrado is not null then
+		set flaglogin = 1;
+        if passwordencontrado = upassword then
+			set flagpassword = 1;
+		end if;
+	end if;
+    
+    return flaglogin and flagpassword;
+end;
 //
 
--- consultar cuentas del cliente (numero de cuenta, moneda, estado, fecha de creación)
 delimiter //
-create procedure sp_depositoencuentapropia()
+create procedure sp_obtenerTipo(login varchar(100))
 begin
-
-end
-//
-
--- detalle de las cuentas (numero de cuenta, numero de movimientos, historial de movimientos)
-delimiter //
-create procedure sp_depositoencuentapropia()
-begin
-
-end
-//
-
--- historial de movimientos (tipo de movimiento, depósitos, retiros, intereses, cobros, etc.), monto
-delimiter //
-create procedure sp_depositoencuentapropia()
-begin
-
-end
+	select usuatipo from usuario where login = login;
+end;
 //

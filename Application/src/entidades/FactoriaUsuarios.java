@@ -11,7 +11,11 @@ package entidades;
  */
 public class FactoriaUsuarios {
     public static Usuario getUsuario(String usuaTipo){
-        if (usuaTipo.equals("Admin")||usuaTipo.equals("Empleado")) return new Empleado();
-        else return new Cliente();
+        if (usuaTipo.equals("Admin")||usuaTipo.equals("Empleado")) {
+            return new UsuarioEmpleado();
+        }
+        else {
+            return new UsuarioCliente();
+        }
     }
 }
