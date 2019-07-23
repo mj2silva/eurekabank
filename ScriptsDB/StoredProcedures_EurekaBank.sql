@@ -75,7 +75,7 @@ begin
     select c.cuensaldo
     into saldocuenta
     from cuenta c 
-    where c.cuencodigo = cuentadestino;
+    where c.cuencodigo = cuencodigo;
     
     return saldocuenta;
 end;
@@ -155,7 +155,7 @@ begin
     where c.cuencodigo = cuencodigo;
     
     set cuentamovimientos = cuentamovimientos + 1;
-    update cuenta set cuencontmov = cuentamovimientos
+    update cuenta c set cuencontmov = cuentamovimientos
     where c.cuencodigo = cuencodigo;
     
 end;
@@ -173,8 +173,8 @@ begin
     declare montoitf decimal;
     
     set cargo = fn_calcularcargo(cuentaorigen);
-    set saldoorigen = fn_obtenersaldocuenta(cuentaorigen);
-    set saldodestino = fn_obtenersaldocuenta(cuentadestino);
+    set saldoorigen = fn_obtenersaldodecuenta(cuentaorigen);
+    set saldodestino = fn_obtenersaldodecuenta(cuentadestino);
     set fechahoy = now();
     set admincodigo = fn_administradordelempleado(emplcodigo);
     set montoitf = importe * fn_obteneritf();
@@ -184,7 +184,7 @@ begin
     insert into movimiento(cuencodigo, movifecha, emplcodigo, tipocodigo, moviimporte, cuenreferencia)
     values (cuentaorigen, fechahoy, emplcodigo, 9, importe, cuentadestino);
     
-    call sp_nuevomovimiento(cuentaorigen);
+    call sp_nuevomovimento(cuentaorigen);
     
     insert into movimiento(cuencodigo, movifecha, emplcodigo, tipocodigo, moviimporte, cuenreferencia)
     values (cuentadestino, fechahoy, emplcodigo, 8, importe - montoitf, cuentaorigen); -- a la cuenta destino llega solo el 99.92% del importe enviado
@@ -225,7 +225,7 @@ begin
     
     insert into movimiento(cuencodigo, movifecha, emplcodigo, tipocodigo, moviimporte, cuenreferencia)
     values (cuentadestino, fechahoy, emplcodigo, 3, importe, null);
-    call sp_nuevomovimiento(cuentadestino);
+    call sp_nuevomovimento(cuentadestino);
     
     if cargo > 0 then
 		insert into movimiento(cuencodigo, movifecha, emplcodigo, tipocodigo, moviimporte, cuenreferencia)

@@ -41,4 +41,8 @@ public class ClienteBL {
     public static String usuarioPorNumeroDeCuenta(String cuenta) throws SQLException {
         return ClienteDAL.usuarioPorNumeroDeCuenta(cuenta);
     }
+
+    public static void realizarTransferencia(String cuentaOrigen, String cuentaDestino, int codigo, BigDecimal monto) throws SQLException {
+        ClienteDAL.realizarTransferencia(cuentaOrigen, cuentaDestino, codigo, monto);
+    }
 }

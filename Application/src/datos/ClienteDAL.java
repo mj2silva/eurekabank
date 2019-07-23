@@ -221,4 +221,24 @@ public class ClienteDAL {
         
         return nombres;
     }
+
+    public static void realizarTransferencia(String cuentaOrigen, String cuentaDestino, int codigo, BigDecimal monto) throws SQLException {
+        try {
+            cn = Conexion.establecerConexion();
+            String sql = "{call sp_transaccionbancaria(?, ?, ?, ?)}";
+            ps = cn.prepareStatement(sql);
+            ps.setString(1, cuentaOrigen);
+            ps.setString(2, cuentaDestino);
+            ps.setInt(3, codigo);
+            ps.setBigDecimal(4, monto);
+            ps.executeUpdate();
+            showMessageDialog(null,"Transferencia realizada con éxito.","Resultado",1);
+        } catch (ClassNotFoundException | SQLException ex) {
+            showMessageDialog(null,"No se pudo realizar la transfrencia.","Error!",0);
+            showMessageDialog(null, ex.getMessage(),"Excepcion", 0);
+        } finally{
+            cn.close();
+            ps.close();
+        }
+    }
 }

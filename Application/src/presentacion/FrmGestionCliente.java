@@ -13,6 +13,8 @@ import entidades.Movimiento;
 import entidades.Persona;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.table.DefaultTableModel;
 import logica.ClienteBL;
@@ -474,7 +476,12 @@ public class FrmGestionCliente extends javax.swing.JFrame {
 
     private void menuTransferenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTransferenciaActionPerformed
         // TODO add your handling code here:
-        FrmTransferencia FrmTransf = new FrmTransferencia();
+        FrmTransferencia FrmTransf = null;
+        try {
+            FrmTransf = new FrmTransferencia(cliente, empleado);
+        } catch (SQLException ex) {
+            Logger.getLogger(FrmGestionCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
         FrmTransf.setVisible(true);
     }//GEN-LAST:event_menuTransferenciaActionPerformed
 

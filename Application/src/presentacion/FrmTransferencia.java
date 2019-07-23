@@ -5,20 +5,43 @@
  */
 package presentacion;
 
+import entidades.Cliente;
+import entidades.Cuenta;
+import entidades.Persona;
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import logica.ClienteBL;
+
 /**
  *
  * @author COMPAQ
  */
 public class FrmTransferencia extends javax.swing.JFrame {
-
+    public Cliente cliente;
+    public Persona empleado;
+    public String cuentaDestino;
+    public String cuentaOrigen;
+    public BigDecimal monto;
     /**
      * Creates new form FrmTransferencia
      */
-    public FrmTransferencia() {
+    public FrmTransferencia(Cliente cliente, Persona empleado) throws SQLException {
         initComponents();
-        
+        listCuentaOrigen.removeAllItems();
+        listCuentaPropia.removeAllItems();
         this.setLocationRelativeTo(null);
         this.setSize(380, 300);
+        this.cliente = cliente;
+        this.empleado = empleado;
+        
+        ArrayList<Cuenta> arrayCuentas = ClienteBL.getCuentas(cliente);
+        for (int i = 0; i < arrayCuentas.size(); i++) {
+            listCuentaOrigen.addItem(arrayCuentas.get(i).getNumeroDeCuenta());
+            listCuentaPropia.addItem(arrayCuentas.get(i).getNumeroDeCuenta());
+        }
     }
 
     /**
@@ -143,6 +166,11 @@ public class FrmTransferencia extends javax.swing.JFrame {
         );
 
         jButton1.setText("CONFIRMAR DEPÓSITO");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -233,9 +261,29 @@ public class FrmTransferencia extends javax.swing.JFrame {
 
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
         // TODO add your handling code here:
-        //txtMonto.setText(txtMontoD.getText());
+        txtMonto.setText(txtMontoD.getText());
+        monto = BigDecimal.valueOf(Double.valueOf(txtMontoD.getText()));
+        cuentaDestino = "";
+        
+        if (btnGroupTipoTransferencia.getSelection().equals(optCuentaPropia.getModel())) {
+            cuentaDestino = listCuentaPropia.getItemAt(listCuentaPropia.getSelectedIndex());
+        } else {
+            cuentaDestino = txtCuentaTercero.getText();
+        }
+        
+        try {
+            txtUsuario.setText(ClienteBL.usuarioPorNumeroDeCuenta(cuentaDestino));
+        } catch (SQLException ex) {
+            Logger.getLogger(FrmTransferencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.setSize(380, 450);
     }//GEN-LAST:event_btnContinuarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        cuentaOrigen = listCuentaOrigen.getItemAt(listCuentaOrigen.getSelectedIndex());
+        ClienteBL.realizarTransferencia(cuentaOrigen, cuentaDestino, empleado.getCodigo(), monto);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -267,7 +315,7 @@ public class FrmTransferencia extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmTransferencia().setVisible(true);
+                //new FrmTransferencia().setVisible(true);
             }
         });
     }

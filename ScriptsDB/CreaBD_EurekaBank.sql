@@ -196,6 +196,10 @@ CREATE TABLE Cuenta (
 		ON UPDATE RESTRICT
 ) ENGINE = INNODB ;
 
+ALTER TABLE Movimiento 
+add constraint pk_movinumero
+primary key (movinumero);
+
 CREATE TABLE Movimiento (
 	cuencodigo       CHAR(8) NOT NULL,
 	movinumero       INTEGER NOT NULL,
