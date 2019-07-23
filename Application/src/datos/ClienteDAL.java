@@ -32,7 +32,7 @@ public class ClienteDAL {
     private static PreparedStatement ps = null;
     private static Cliente cliente;
 
-    public static Persona obtenerCliente(int usuaId) {
+    public static Persona obtenerCliente(int usuaId) throws SQLException {
         try {
             cn = Conexion.establecerConexion();
             st = cn.createStatement();
@@ -52,12 +52,16 @@ public class ClienteDAL {
             }
         } catch (ClassNotFoundException | SQLException ex) {
             showMessageDialog(null, ex.getMessage(),"Excepcion", 0);
+        }finally{
+            cn.close();
+            rs.close();
+            ps.close();
         }
         
         return cliente;
     }
     
-    public static ArrayList<Cliente> buscarCliente(String busqueda) {
+    public static ArrayList<Cliente> buscarCliente(String busqueda) throws SQLException {
         ArrayList<Cliente> arrayClientes = new ArrayList<>();
         
         try {
@@ -80,12 +84,16 @@ public class ClienteDAL {
             }
         } catch (ClassNotFoundException | SQLException ex) {
             showMessageDialog(null, ex.getMessage(),"Excepcion", 0);
+        }finally{
+            cn.close();
+            rs.close();
+            ps.close();
         }
         
         return arrayClientes;
     }
     
-    public static ArrayList<Cuenta> cuentaCliente(Cliente cliente) {
+    public static ArrayList<Cuenta> cuentaCliente(Cliente cliente) throws SQLException {
         ArrayList<Cuenta> arrayCuentas = new ArrayList<>();
         
         try {
@@ -108,12 +116,16 @@ public class ClienteDAL {
             }
         } catch (ClassNotFoundException | SQLException ex) {
             showMessageDialog(null, ex.getMessage(),"Excepcion", 0);
+        }finally{
+            cn.close();
+            rs.close();
+            ps.close();
         }
         
         return arrayCuentas;
     }
     
-    public static ArrayList<Movimiento> historialDeMovimientos(Cuenta cuenta) {
+    public static ArrayList<Movimiento> historialDeMovimientos(Cuenta cuenta) throws SQLException {
         ArrayList<Movimiento> arrayMovimientos = new ArrayList<>();
         
         try {
@@ -138,12 +150,16 @@ public class ClienteDAL {
             }
         } catch (ClassNotFoundException | SQLException ex) {
             showMessageDialog(null, ex.getMessage(),"Excepcion", 0);
+        } finally{
+            cn.close();
+            rs.close();
+            ps.close();
         }
         
         return arrayMovimientos;
     }
     
-    public static void agregarCuenta(Cuenta cuenta, Cliente cliente, Persona empleado) 
+    public static void agregarCuenta(Cuenta cuenta, Cliente cliente, Persona empleado) throws SQLException 
     {
         try {
             cn = Conexion.establecerConexion();
@@ -155,9 +171,54 @@ public class ClienteDAL {
             ps.setInt(4, empleado.getCodigo());
             ps.setBigDecimal(5, cuenta.getSaldo());
             ps.executeUpdate();
-            
         } catch (ClassNotFoundException | SQLException ex) {
             showMessageDialog(null, ex.getMessage(),"Excepcion", 0);
+        } finally{
+            cn.close();
+            ps.close();
         }
+    }
+    
+    public static void relizarDeposito(Persona empleado, String cuenta, BigDecimal monto) throws SQLException {
+        try {
+            cn = Conexion.establecerConexion();
+            String sql = "{call sp_deposito(?, ?, ?)}";
+            ps = cn.prepareStatement(sql);
+            ps.setString(1, cuenta);
+            ps.setBigDecimal(2, monto);
+            ps.setInt(3, empleado.getCodigo());
+            ps.executeUpdate();
+            showMessageDialog(null,"Depósito realizado con éxito.","Resultado",1);
+        } catch (ClassNotFoundException | SQLException ex) {
+            showMessageDialog(null,"No se pudo realizar el depósito.","Error!",0);
+            showMessageDialog(null, ex.getMessage(),"Excepcion", 0);
+        } finally{
+            cn.close();
+            ps.close();
+        }
+        
+    }
+    
+    public static String usuarioPorNumeroDeCuenta(String cuenta) throws SQLException {
+        String nombres = "";
+        
+        try {
+            cn = Conexion.establecerConexion();
+            String sql = "select concat(clienombre, cliepaterno, cliematerno) from cliente c join cuenta cu "
+                    + "on c.cliecodigo = cu.cliecodigo where cu.cuencodigo = '" + cuenta + "'";
+            ps = cn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                nombres = rs.getString(1);
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            showMessageDialog(null, ex.getMessage(),"Excepcion", 0);
+        }finally{
+            cn.close();
+            rs.close();
+            ps.close();
+        }
+        
+        return nombres;
     }
 }

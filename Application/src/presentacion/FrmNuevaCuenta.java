@@ -13,6 +13,9 @@ import entidades.Usuario;
 import entidades.UsuarioEmpleado;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import logica.ClienteBL;
 
 /**
@@ -152,7 +155,11 @@ public class FrmNuevaCuenta extends javax.swing.JFrame {
         String tipo = cbxMoneda.getItemAt(cbxMoneda.getSelectedIndex());
         
         Cuenta cuenta = new Cuenta(numeroDeCuenta, tipo, monto, "ACTIVO", 0);
-        ClienteBL.agregarCuenta(cuenta, cliente, usuario);
+        try {
+            ClienteBL.agregarCuenta(cuenta, cliente, usuario);
+        } catch (SQLException ex) {
+            Logger.getLogger(FrmNuevaCuenta.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         this.dispose();
     }//GEN-LAST:event_btnCrearCuentaActionPerformed

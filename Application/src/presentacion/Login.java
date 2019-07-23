@@ -104,7 +104,7 @@ public class Login extends javax.swing.JFrame {
                     frmCliente.setVisible(true);
                     this.dispose();
                     break;
-                case "administrador":
+                case "admin":
                     FrmAdministrador frmAdministrador = new FrmAdministrador(usuario);
                     frmAdministrador.setVisible(true);
                     this.dispose();

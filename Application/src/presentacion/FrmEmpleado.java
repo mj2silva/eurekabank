@@ -9,6 +9,7 @@ import entidades.Cliente;
 import entidades.Usuario;
 import entidades.UsuarioEmpleado;
 import java.awt.BorderLayout;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import logica.ClienteBL;
@@ -221,7 +222,7 @@ public class FrmEmpleado extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        FrmDeposito FrmDep = new FrmDeposito();
+        FrmDeposito FrmDep = new FrmDeposito(usuario.getPersona());
         FrmDep.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -282,7 +283,7 @@ public class FrmEmpleado extends javax.swing.JFrame {
     private javax.swing.JLabel txtUsuario;
     // End of variables declaration//GEN-END:variables
 
-    public static void llenarTabla(String busqueda) {
+    public static void llenarTabla(String busqueda) throws SQLException {
         modelo.setRowCount(0);
         ArrayList<Cliente> arrayClientes;
         arrayClientes = ClienteBL.buscarCliente(busqueda);

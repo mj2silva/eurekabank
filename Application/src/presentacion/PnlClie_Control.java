@@ -7,7 +7,10 @@ package presentacion;
 
 import entidades.Cliente;
 import java.awt.BorderLayout;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import logica.ClienteBL;
 import static presentacion.FrmEmpleado.modelo;
@@ -117,14 +120,23 @@ public class PnlClie_Control extends javax.swing.JPanel {
     private void btnEstadoCuentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEstadoCuentaMouseClicked
         // TODO add your handling code here:
         int index = tablaClientes.getSelectedRow();
-        FrmGestionCliente FrmGestClie = new FrmGestionCliente(arrayClientes.get(index), usuario.getPersona());
+        FrmGestionCliente FrmGestClie = null;
+        try {
+            FrmGestClie = new FrmGestionCliente(arrayClientes.get(index), usuario.getPersona());
+        } catch (SQLException ex) {
+            Logger.getLogger(PnlClie_Control.class.getName()).log(Level.SEVERE, null, ex);
+        }
         FrmGestClie.setVisible(true);
     }//GEN-LAST:event_btnEstadoCuentaMouseClicked
 
     private void btnBuscarClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBuscarClienteMouseClicked
         // TODO add your handling code here:
         busqueda = JOptionPane.showInputDialog(null, "Buscar cliente: ", "Busqueda", 3);
-        llenarTabla(busqueda);
+        try {
+            llenarTabla(busqueda);
+        } catch (SQLException ex) {
+            Logger.getLogger(PnlClie_Control.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnBuscarClienteMouseClicked
 
 
@@ -135,7 +147,7 @@ public class PnlClie_Control extends javax.swing.JPanel {
     private javax.swing.JLabel btnRegistrarCliente;
     // End of variables declaration//GEN-END:variables
 
-    private void llenarTabla(String busqueda) {
+    private void llenarTabla(String busqueda) throws SQLException {
         modelo.setRowCount(0);
         if (arrayClientes.size() > 0) {
             arrayClientes.clear();

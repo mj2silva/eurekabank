@@ -5,17 +5,25 @@
  */
 package presentacion;
 
+import datos.ClienteDAL;
+import entidades.Persona;
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author COMPAQ
  */
 public class FrmDeposito extends javax.swing.JFrame {
-
+    public Persona usuario;
     /**
      * Creates new form FrmDeposito
      */
-    public FrmDeposito() {
+    public FrmDeposito(Persona usuario) {
         initComponents();
+        this.usuario = usuario;
         pnlDescripcion.setVisible(false);
         btnConfirmar.setVisible(false);
         this.setLocationRelativeTo(null);
@@ -104,6 +112,11 @@ public class FrmDeposito extends javax.swing.JFrame {
         );
 
         btnConfirmar.setText("CONFIRMAR DEPÓSITO");
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmarActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("MONTO:");
 
@@ -163,8 +176,25 @@ public class FrmDeposito extends javax.swing.JFrame {
         pnlDescripcion.setVisible(true);
         btnConfirmar.setVisible(true);
         txtMonto.setText(txtMontoD.getText());
+        
+        try {
+            txtUsuario.setText(ClienteDAL.usuarioPorNumeroDeCuenta(txtCuentaD.getText()));
+        } catch (SQLException ex) {
+            Logger.getLogger(FrmDeposito.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.setSize(400, 350);
     }//GEN-LAST:event_btnContinuarActionPerformed
+
+    private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
+        try {
+            // TODO add your handling code here:
+            ClienteDAL.relizarDeposito(usuario, txtCuentaD.getText(), BigDecimal.valueOf(Double.valueOf(txtMonto.getText())));
+        } catch (SQLException ex) {
+            Logger.getLogger(FrmDeposito.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        this.dispose();
+    }//GEN-LAST:event_btnConfirmarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -196,7 +226,7 @@ public class FrmDeposito extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmDeposito().setVisible(true);
+                //new FrmDeposito().setVisible(true);
             }
         });
     }

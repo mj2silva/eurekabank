@@ -38,8 +38,6 @@ public class Cuenta {
         this.estado = estado;
         this.contMov = contMov;
     }
-    
-    
 
     public Cuenta(String numeroDeCuenta, String tipoDeMoneda, BigDecimal saldo, String estado, Date fechaCreacion,  int contMov, ArrayList<Movimiento> movimientos) {
         this.numeroDeCuenta = numeroDeCuenta;

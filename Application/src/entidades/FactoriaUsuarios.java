@@ -6,19 +6,22 @@
 package entidades;
 
 import datos.EmpleadoDAL;
+import java.sql.SQLException;
 
 /**
  *
  * @author SERIN
  */
 public class FactoriaUsuarios {
-    public static Usuario getUsuario(String tipo, int id, String login, String password){
+    public static Usuario getUsuario(String tipo, int id, String login, String password) throws SQLException{
         
         
-        if (tipo.equals("admin")||tipo.equals("empleado")) {
-            return new UsuarioEmpleado(id, login, password, tipo);
+        if (tipo.equals("admin")) {
+            return new UsuarioAdministrador(id, login, password, tipo);
         }
-        else {
+        else if (tipo.equals("empleado")){
+            return new UsuarioEmpleado(id, login, password, tipo);
+        } else {
             return new UsuarioCliente(id, login, password, tipo);
         }
     }

@@ -6,6 +6,7 @@
 package presentacion;
 
 import entidades.Usuario;
+import entidades.*;
 import java.awt.BorderLayout;
 
 /**
@@ -14,10 +15,12 @@ import java.awt.BorderLayout;
  */
 public class FrmAdministrador extends javax.swing.JFrame {
     
-    private Usuario usuario;
+    
     /**
      * Creates new form FrmAdministrador
      */
+    public static Usuario usuario;
+    
     public FrmAdministrador(Usuario usuario) {
         initComponents();
         txtUsuario.setText(Login.ID);

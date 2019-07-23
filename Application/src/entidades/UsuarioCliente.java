@@ -6,6 +6,7 @@
 package entidades;
 
 import datos.ClienteDAL;
+import java.sql.SQLException;
 
 /**
  *
@@ -13,7 +14,7 @@ import datos.ClienteDAL;
  */
 public class UsuarioCliente extends Usuario {
 
-    public UsuarioCliente(int id, String login, String password, String usuaTipo) {
+    public UsuarioCliente(int id, String login, String password, String usuaTipo) throws SQLException {
         super(id, login, password, "cliente");
         this.persona = ClienteDAL.obtenerCliente(id);
     }

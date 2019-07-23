@@ -36,12 +36,13 @@ begin
     select s.sucucodigo
     into sucucodigo
     from sucursal s
-    join asignado 
+    join asignado a
     on s.sucucodigo = a.sucucodigo
     join empleado e
-    on a.emplcodigo = e.emplcodigo;
+    on a.emplcodigo = e.emplcodigo
+    where e.emplcodigo = emplcodigo;
     
-	set admincodigo = fn_getidiadministrador(sucucodigo);
+	set admincodigo = fn_getidadministrador(sucucodigo);
     
     return admincodigo;
 end;
@@ -91,7 +92,7 @@ begin
     declare monecodigo integer;
     
     set cargo = 0;
-    set nromovimientos = fn_numerodemovimientosdelacuenta(cuentaorigen);
+    set nromovimientos = fn_numerodemovimientosdelacuenta(cuencodigo);
     set maxtransacciones = fn_obtenertransaccionesmax();
 	
     if nromovimientos > maxtransacciones then
@@ -218,7 +219,7 @@ begin
     set fechahoy = now();
     set cargo = fn_calcularcargo(cuentadestino);
     set admincodigo = fn_administradordelempleado(emplcodigo);
-    set saldoinicial = fn_obtenersaldocuenta(cuentadestino);
+    set saldoinicial = fn_obtenersaldodecuenta(cuentadestino);
     
     start transaction;
     
@@ -322,7 +323,7 @@ begin
     where e.emplcodigo = emplcodigo;
     
 	insert into cuenta values (cuencodigo, monecodigo, sucucodigo, emplcodigo, cliecodigo, importe, fechahoy, 'ACTIVO', 0, '123456');
-    insert into movimiento values (cuencodigo, fechahoy, emplcodigo, 1, importe, null);
+    insert into movimiento(cuencodigo, movifecha, emplcodigo, tipocodigo, moviimporte, cuenreferencia) values (cuencodigo, fechahoy, emplcodigo, 1, importe, null);
 end;
 // -- implemented
 

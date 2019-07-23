@@ -11,6 +11,7 @@ import entidades.Cuenta;
 import entidades.Empleado;
 import entidades.Movimiento;
 import entidades.Persona;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.table.DefaultTableModel;
@@ -32,7 +33,7 @@ public class FrmGestionCliente extends javax.swing.JFrame {
      * @param cliente
      * @param empleado
      */
-    public FrmGestionCliente(Cliente cliente, Persona empleado) {
+    public FrmGestionCliente(Cliente cliente, Persona empleado) throws SQLException {
         initComponents();
         this.cliente = cliente;
         this.empleado = empleado;
@@ -104,7 +105,6 @@ public class FrmGestionCliente extends javax.swing.JFrame {
         tablaCuentas = new javax.swing.JTable();
         jLabel11 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         btnHistorial = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
@@ -325,8 +325,6 @@ public class FrmGestionCliente extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("ELIMINAR");
-
         btnHistorial.setText("Ver historial");
         btnHistorial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -345,9 +343,7 @@ public class FrmGestionCliente extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(101, 101, 101)
                         .addComponent(btnHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -359,7 +355,6 @@ public class FrmGestionCliente extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2)
                     .addComponent(btnHistorial))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -473,7 +468,7 @@ public class FrmGestionCliente extends javax.swing.JFrame {
 
     private void menuDepositoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDepositoActionPerformed
         // TODO add your handling code here:
-        FrmDeposito FrmDep = new FrmDeposito();
+        FrmDeposito FrmDep = new FrmDeposito(empleado);
         FrmDep.setVisible(true);
     }//GEN-LAST:event_menuDepositoActionPerformed
 
@@ -553,7 +548,6 @@ public class FrmGestionCliente extends javax.swing.JFrame {
     private javax.swing.JButton btnModificar;
     private javax.swing.JComboBox<String> cbxCiudad;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

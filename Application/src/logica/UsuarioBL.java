@@ -18,7 +18,7 @@ public class UsuarioBL {
         Usuario usuario;
         
         if (!UsuarioDAL.verificarUsuario(login, password)) {
-            throw new Exception("Password o contraseña incorrectos");
+            throw new Exception("Usuario o contraseña incorrectos");
         } else {
             usuario = UsuarioDAL.crearUsuario(login, password);
             return usuario;
