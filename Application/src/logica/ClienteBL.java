@@ -1,0 +1,22 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package logica;
+
+import datos.ClienteDAL;
+import entidades.Cliente;
+import java.util.ArrayList;
+
+/**
+ *
+ * @author manue
+ */
+public class ClienteBL {
+    public static ArrayList<Cliente> buscarCliente(String busqueda) {
+        ArrayList<Cliente> arrayClientes;
+        arrayClientes = ClienteDAL.buscarCliente(busqueda);
+        return arrayClientes;
+    }
+}

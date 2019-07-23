@@ -9,7 +9,6 @@ import entidades.Cliente;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import logica.ClienteBL;
 import static presentacion.FrmEmpleado.modelo;
 
@@ -19,14 +18,12 @@ import static presentacion.FrmEmpleado.modelo;
  */
 public class PnlClie_Control extends javax.swing.JPanel {
     public String busqueda;
-    public JTable table;
     /**
      * Creates new form PnlClie_Control
      */
-    public PnlClie_Control(JTable table) {
+    public PnlClie_Control() {
         
         initComponents();
-        this.table = table;
     }
 
     /**

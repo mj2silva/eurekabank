@@ -206,7 +206,7 @@ public class FrmEmpleado extends javax.swing.JFrame {
         // TODO add your handling code here:
         PanelAdministrador.setVisible(false);
         jScrollPane1.setVisible(true);
-        PnlClie_Control clieControl = new PnlClie_Control(tablaClientes);
+        PnlClie_Control clieControl = new PnlClie_Control();
         clieControl.setSize(440,80);
         clieControl.setLocation(0,0);
         PanelControl.setVisible(true);
